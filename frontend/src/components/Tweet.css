@@ -1,0 +1,84 @@
+.tweet-card {
+    padding: 20px;
+    margin-bottom: 20px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.tweet-user-info {
+    display: flex;
+    align-items: center;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ccc;
+}
+
+.tweet-user-avatar {
+    width: 40px;
+    height: 40px;
+    background-color: #4CAF50;
+    color: #fff;
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    line-height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.tweet-user-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.tweet-user-name {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.tweet-time {
+    color: #666;
+    font-size: 14px;
+}
+
+.tweet-content {
+    padding: 20px;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+.tweet-reactions {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    justify-content: space-between;
+}
+
+.like-button {
+    font-size: 24px;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out, color 0.2s ease-in-out;
+    color: #888;
+    /* Initial color */
+}
+
+.like-button:hover {
+    transform: scale(1.2);
+    color: #e0245e;
+    /* Color on hover */
+}
+
+.save-button {
+    font-size: 24px;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out, color 0.2s ease-in-out;
+    color: #888;
+    /* Initial color */
+}
+
+.save-button:hover {
+    transform: scale(1.2);
+    color: #4CAF50;
+    /* Color on hover */
+}

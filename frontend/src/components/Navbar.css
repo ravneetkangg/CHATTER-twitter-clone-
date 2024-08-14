@@ -1,0 +1,48 @@
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgb(255, 255, 255);
+    padding: 20px 40px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.dibba {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.dibba:hover {
+    color: #1fccfc;
+}
+
+.site-icon {
+    height: 45px;
+    width: 45px;
+}
+
+.site-title {
+    font-size: xx-large;
+    font-weight: bold;
+}
+
+.logout-btn {
+    background-color: black;
+    color: #fff;
+    border: black solid;
+    padding: 12px 24px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.logout-btn:hover {
+    background-color: white;
+    color: black;
+}

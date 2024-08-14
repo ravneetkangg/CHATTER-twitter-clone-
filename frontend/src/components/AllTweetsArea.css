@@ -1,0 +1,19 @@
+.all-tweets-area {
+    padding: 20px;
+    /* background-color: #f7f7f7; */
+    /* border: 1px solid #ccc; */
+    /* border-radius: 5px; */
+    /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); */
+}
+
+.all-tweets-area h2 {
+    margin-top: 0;
+    padding-bottom: 10px;
+    /* border-bottom: 1px solid #ccc; */
+}
+
+.all-tweets-area p {
+    padding: 20px;
+    text-align: center;
+    /* color: #666; */
+}
