@@ -9,7 +9,7 @@ const AllTweetsArea = ({ handlePostTweet }) => {
     useEffect(() => {
         const fetchTweets = async () => {
             try {
-                const response = await axios.get('http://localhost:4900/api/tweets/tweets');
+                const response = await axios.get('https://chatter-zan2.onrender.com/api/tweets/tweets');
                 setArray(response.data);
             } catch (error) {
                 console.error('Error fetching tweets:', error);

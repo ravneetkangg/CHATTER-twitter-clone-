@@ -16,7 +16,7 @@ const Register = () => {
         event.preventDefault();
         
         try {
-            const response = await axios.post('http://localhost:4900/api/users/register', {
+            const response = await axios.post('https://chatter-zan2.onrender.com/api/users/register', {
                 email: inputs.email,
                 password: inputs.password
             });

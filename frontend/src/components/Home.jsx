@@ -31,7 +31,7 @@ const Home = () => {
 
   const fetchProfilePic = async (userId) => {
     try {
-      const response = await axios.get(`http://localhost:4900/api/users/get-photo/${userId}`, {
+      const response = await axios.get(`https://chatter-zan2.onrender.com/api/users/get-photo/${userId}`, {
         responseType: 'arraybuffer'
       });
       const base64Flag = `data:${response.headers['content-type']};base64,`;
@@ -65,7 +65,7 @@ const Home = () => {
 
   const handlePostTweet = async () => {
     try {
-      const response = await axios.post("http://localhost:4900/api/tweets/create", {
+      const response = await axios.post("https://chatter-zan2.onrender.com/api/tweets/create", {
         tweet: tweetContent,
         email: userData.email,
       });
@@ -89,7 +89,7 @@ const Home = () => {
     formData.append("photo", selectedFile);
 
     try {
-      const response = await axios.post("http://localhost:4900/api/users/upload-photo", formData, {
+      const response = await axios.post("https://chatter-zan2.onrender.com/api/users/upload-photo", formData, {
         headers: {
           "Content-Type": "multipart/form-data"
         }

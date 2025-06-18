@@ -27,7 +27,7 @@ const Tweet = ({ tweet, user, tweetedAt, user_id }) => {
     useEffect(() => {
         const fetchProfilePic = async () => {
             try {
-                const response = await axios.get(`http://localhost:4900/api/users/get-photo/${user_id}`, {
+                const response = await axios.get(`https://chatter-zan2.onrender.com/api/users/get-photo/${user_id}`, {
                     responseType: 'arraybuffer'
                 });
                 const base64Flag = `data:${response.headers['content-type']};base64,`;
