@@ -6,43 +6,98 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: rgb(255, 255, 255);
+    background-color: white;
     padding: 20px 40px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
 }
 
-.dibba {
+
+/* Left Section */
+
+.nav-left {
     display: flex;
-    flex-direction: row;
     align-items: center;
-    justify-content: center;
-}
-
-.dibba:hover {
-    color: #1fccfc;
+    cursor: pointer;
+    gap: 10px;
 }
 
 .site-icon {
-    height: 45px;
-    width: 45px;
+    height: 40px;
+    width: 40px;
 }
 
 .site-title {
-    font-size: xx-large;
+    font-size: 1.8rem;
     font-weight: bold;
+    color: black;
+}
+
+
+/* Center Navigation Links */
+
+.nav-links {
+    display: flex;
+    gap: 36px;
+    /* slightly bigger gap for bold nav links */
+    align-items: center;
+}
+
+.nav-links a {
+    position: relative;
+    text-decoration: none;
+    color: black;
+    font-size: 1.1rem;
+    font-weight: 600;
+    padding: 5px 0;
+    transition: color 0.3s ease;
+}
+
+
+/* Hover color */
+
+.nav-links a:hover {
+    color: #1DA1F2;
+}
+
+
+/* Cool underline animation */
+
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    width: 0%;
+    height: 2px;
+    left: 0;
+    bottom: 0;
+    background-color: #1DA1F2;
+    transition: width 0.3s ease-in-out;
+}
+
+.nav-links a:hover::after {
+    width: 100%;
+}
+
+
+/* Right Section */
+
+.nav-right {
+    display: flex;
+    align-items: center;
 }
 
 .logout-btn {
     background-color: black;
     color: #fff;
-    border: black solid;
+    border: none;
     padding: 12px 24px;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: all 0.3s ease;
 }
 
 .logout-btn:hover {
     background-color: white;
     color: black;
+    border: 1px solid black;
 }

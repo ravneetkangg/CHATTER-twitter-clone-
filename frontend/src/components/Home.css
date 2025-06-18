@@ -20,29 +20,25 @@
 }
 
 .post-your-tweet {
-    padding: 20px;
+    padding: 20px 0;
+    /* ✅ Top & bottom padding only */
     border-bottom: 1px solid #ccc;
 }
 
 .tweet-input {
     width: 100%;
     height: 100px;
-    /* Initial height */
     padding: 10px;
     font-size: 16px;
     border: 1px solid #ccc;
     border-radius: 5px;
     transition: height 0.3s;
-    /* Add a transition for smooth height change */
     resize: none;
-    /* Prevent textarea from being resized by user */
 }
 
 .tweet-input:focus {
     height: 300px;
-    /* Expanded height when textarea is focused */
     outline: none;
-    /* Remove default focus outline */
 }
 
 .post-btn {
@@ -69,121 +65,129 @@
     top: 100px;
     height: calc(100vh - 140px);
     overflow-y: auto;
+    box-sizing: border-box;
 }
 
 .user-info {
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #f7f7f7;
+    background-color: #fff;
+    border: 1px solid #e3e3e3;
+    border-radius: 12px;
+    padding: 24px 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     text-align: center;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    height: 100%;
+    gap: 16px;
 }
 
-.user-info p {
-    margin: 0;
-    padding: 10px;
-}
-
-.user-profile-pic {
-    width: 100px;
-    height: 100px;
+.user-profile-pic,
+.default-avatar {
+    width: 110px;
+    height: 110px;
     border-radius: 50%;
     object-fit: cover;
-    margin-bottom: 10px;
-}
-
-.default-avatar {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
+    margin: 0 auto;
     background-color: #ccc;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 24px;
+    font-size: 28px;
+    border: 2px solid black;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    /* ✅ subtle lift */
     color: white;
-    margin-bottom: 10px;
+}
+
+.user-info p {
+    margin: 0;
+    font-size: 0.95rem;
+    color: #333;
+    word-break: break-word;
+    line-height: 1.5;
+}
+
+.user-info p svg {
+    vertical-align: middle;
+    margin-right: 6px;
+}
+
+.user-info p:first-of-type {
+    font-weight: 600;
+    font-size: 1.05rem;
+    margin-top: 8px;
+    text-transform: lowercase;
+}
+
+.user-joined {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-size: 0.9rem;
+    color: #555;
 }
 
 .file-input-container {
-    position: relative;
-    overflow: hidden;
-    display: inline-block;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
     margin-top: 10px;
 }
 
-.file-input-container input[type="file"] {
-    position: absolute;
-    font-size: 999px;
-    opacity: 0;
-    right: 0;
-    top: 0;
-}
-
-.file-input-label {
-    background-color: black;
-    color: white;
-    padding: 10px 20px;
-    border: black solid;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.file-input-label:hover {
-    background-color: white;
-    color: black;
-}
-
-.file-name {
-    display: block;
-    margin-top: 5px;
-    font-size: 14px;
-}
-
+.file-input-label,
 .upload-btn {
-    background-color: black;
-    color: white;
-    padding: 10px 20px;
-    border: black solid;
-    border-radius: 5px;
+    background-color: #000;
+    color: #fff;
+    padding: 8px 16px;
+    border: 1px solid #000;
+    border-radius: 6px;
+    font-size: 0.9rem;
     cursor: pointer;
-    margin-top: 10px;
-    transition: background-color 0.3s ease;
+    transition: 0.3s ease;
 }
 
+.file-input-label:hover,
 .upload-btn:hover {
     background-color: white;
     color: black;
 }
 
+.file-name {
+    font-size: 0.8rem;
+    color: #666;
+}
 
-/* Add CSS for liked-tweets and saved-tweets buttons */
+
+/* ✅ Cleaned and corrected duplication */
 
 .user-gallery {
-    margin-top: 20px;
-    margin-bottom: 0;
     display: flex;
+    gap: 10px;
     width: 100%;
+    margin-top: auto;
+}
+
+.user-gallery a {
+    flex: 1;
+    /* Each Link takes equal space */
+    text-decoration: none;
+    /* Remove underline */
 }
 
 .liked-tweets,
 .saved-tweets {
+    width: 100%;
+    /* Fill Link */
     background-color: black;
     color: white;
-    padding: 10px 20px;
-    border: black solid;
-    border-radius: 5px;
+    padding: 10px;
+    font-size: 0.9rem;
+    border-radius: 6px;
+    border: 1px solid black;
     cursor: pointer;
-    transition: background-color 0.3s ease, color 0.3s ease;
-    width: 50%;
-    /* Each button covers 50% of the width */
-    box-sizing: border-box;
-    margin: 0 2px;
+    text-align: center;
+    transition: 0.3s ease;
 }
 
 .liked-tweets:hover,

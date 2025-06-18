@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./Home.css";
-import Navbar from "./Navbar";
 import AllTweetsArea from "./AllTweetsArea";
+import { FaPen, FaRegCalendarAlt } from "react-icons/fa";
 import axios from "axios";
 
 const Home = () => {
@@ -12,11 +12,6 @@ const Home = () => {
   const [profilePic, setProfilePic] = useState(null);
   const textareaRef = useRef(null);
   const [selectedFile, setSelectedFile] = useState(null);
-
-  const handleLogout = () => {
-    sessionStorage.removeItem("user");
-    navigate("/login");
-  };
 
   useEffect(() => {
     const userDataString = sessionStorage.getItem("user");
@@ -107,9 +102,16 @@ const Home = () => {
     }
   };
 
+  const formattedJoinDate = userData?.createdAt
+    ? new Date(userData.createdAt).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+    })
+    : null;
+
+
   return (
     <>
-      <Navbar handleLogout={handleLogout} />
       <div className="main-container">
         <div className="tweets-container">
           <div className="post-your-tweet">
@@ -152,7 +154,17 @@ const Home = () => {
                 </button>
               </div>
               <p>{userData.email}</p>
-              <p>Total Tweets: {userData.tweets.length}</p>
+              {formattedJoinDate && (
+                <p className="user-joined">
+                  <FaRegCalendarAlt style={{ marginRight: "6px" }} />
+                  Joined: {formattedJoinDate}
+                </p>
+              )}
+
+              <p>
+                <FaPen style={{ marginRight: "6px" }} />
+                Total Tweets: {userData.tweets.length}
+              </p>
               <div className="user-gallery">
                 <Link to="/liked">
                   <div className="liked-tweets">Liked</div>
