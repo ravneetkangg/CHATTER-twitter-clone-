@@ -17,9 +17,11 @@ const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString(undefined, options);
 };
 
-const Tweet = ({ tweet, user, tweetedAt, user_id, tweet_id, likes = [] }) => {
+const Tweet = ({ tweet, user, tweetedAt, user_id, tweet_id, likes = [],comments =[] }) => {
     const [profilePic, setProfilePic] = useState(null);
     const [liked, setLiked] = useState(false);
+    const [likeCount, setLikeCount] = useState(likes.length);
+    const [commentCount, setCommentCount] = useState(comments.length);
     const userInfo = JSON.parse(sessionStorage.getItem('user'));
     const currentUserId = userInfo?._id;
 
@@ -65,7 +67,9 @@ const Tweet = ({ tweet, user, tweetedAt, user_id, tweet_id, likes = [] }) => {
 
             await axios.put(url, { userId: currentUserId });
 
-            setLiked(!liked); // toggle local like state
+            setLiked(!liked);
+            setLikeCount(prev => liked ? prev - 1 : prev + 1);
+
         } catch (error) {
             console.error("Error toggling like:", error);
         }
@@ -73,6 +77,7 @@ const Tweet = ({ tweet, user, tweetedAt, user_id, tweet_id, likes = [] }) => {
 
     return (
         <div className="tweet-card">
+            
             <div className="tweet-user-info">
                 {profilePic ? (
                     <img src={profilePic} alt="User avatar" className="tweet-user-avatar" />
@@ -84,16 +89,27 @@ const Tweet = ({ tweet, user, tweetedAt, user_id, tweet_id, likes = [] }) => {
                     <span className="tweet-time">{formatDate(tweetedAt)}</span>
                 </div>
             </div>
-            <div className="tweet-content">{tweet}</div>
-            <div className="tweet-reactions">
-                {liked ? (
-                    <FcLike className='like-button' onClick={handleLike} />
-                ) : (
-                    <FcLikePlaceholder className='like-button' onClick={handleLike} />
-                )}
 
-                <FaRegComment className="comment-button" />
-                <FaRegBookmark className='save-button' />
+            <div className="tweet-content">{tweet}</div>
+
+            <div className="tweet-reactions">
+                <div className="reaction-group" onClick={handleLike}>
+                    {liked ? (
+                        <FcLike className="like-button" />
+                    ) : (
+                        <FcLikePlaceholder className="like-button" />
+                    )}
+                    <span className="reaction-count">{likeCount}</span>
+                </div>
+
+                <div className="reaction-group">
+                    <FaRegComment className="comment-button" />
+                    <span className="reaction-count">{commentCount}</span>
+                </div>
+
+                <div className="reaction-group">
+                    <FaRegBookmark className="save-button" />
+                </div>
             </div>
         </div>
     );

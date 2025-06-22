@@ -110,6 +110,22 @@ router.put('/unlike/:tweetId', async(req, res) => {
     }
 });
 
+// GET all tweets liked by a user
+router.get('/liked/:userId', async(req, res) => {
+    try {
+        const { userId } = req.params;
+
+        const likedTweets = await Tweet.find({ likes: userId })
+            .populate('email', 'email'); // to get user email who posted
+
+        res.status(200).json(likedTweets);
+    } catch (error) {
+        console.error("Error fetching liked tweets:", error);
+        res.status(500).json({ message: "Failed to fetch liked tweets" });
+    }
+});
+
+
 
 // POST /comment/:tweetId
 router.post('/comment/:tweetId', async(req, res) => {

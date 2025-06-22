@@ -39,6 +39,9 @@
     border-radius: 50%;
     margin-right: 12px;
     overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .tweet-user-avatar img {
@@ -87,16 +90,32 @@
     display: flex;
     align-items: center;
     margin-top: 12px;
-    gap: 24px;
-    font-size: 22px;
+    gap: 20px;
+    font-size: 20px;
 }
 
-.like-button,
-.comment-button,
-.save-button {
+.reaction-group {
+    display: flex;
+    align-items: center;
+    gap: 6px;
     cursor: pointer;
-    transition: transform 0.2s ease-in-out, color 0.2s ease-in-out;
+    font-size: 16px;
+    color: #333;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.reaction-count {
+    font-size: 15px;
+    color: #555;
+    margin-left: 2px;
+}
+
+
+/* Like button styles */
+
+.like-button {
     color: #657786;
+    transition: transform 0.2s ease-in-out, color 0.2s ease-in-out;
 }
 
 .like-button.liked {
@@ -108,9 +127,23 @@
     color: #e0245e;
 }
 
+
+/* Comment button styles */
+
+.comment-button {
+    color: #657786;
+}
+
 .comment-button:hover {
     transform: scale(1.2);
     color: #1da1f2;
+}
+
+
+/* Save button styles */
+
+.save-button {
+    color: #657786;
 }
 
 .save-button:hover {

@@ -32,6 +32,7 @@ const AllTweetsArea = ({ handlePostTweet }) => {
                         tweetedAt={tweet.createdAt}
                         tweet_id={tweet._id}
                         likes={tweet.likes || []}
+                        comments={tweet.comments || []}
                     />
                 ))
             ) : (
