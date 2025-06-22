@@ -60,8 +60,8 @@ const Tweet = ({ tweet, user, tweetedAt, user_id, tweet_id, likes = [] }) => {
             if (!currentUserId) return;
 
             const url = liked
-                ? `http://localhost:4900/api/tweets/unlike/${tweet_id}`
-                : `http://localhost:4900/api/tweets/like/${tweet_id}`;
+                ? `${API_BASE_URL}/api/tweets/unlike/${tweet_id}`
+                : `${API_BASE_URL}/api/tweets/like/${tweet_id}`;
 
             await axios.put(url, { userId: currentUserId });
 

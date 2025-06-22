@@ -66,7 +66,7 @@ const Home = () => {
 
   const handlePostTweet = async () => {
     try {
-      const response = await axios.post("http://localhost:4900/api/tweets/create", {
+      const response = await axios.post(`${API_BASE_URL}/api/tweets/create`, {
         tweet: tweetContent,
         email: userData.email,
       });
@@ -90,7 +90,7 @@ const Home = () => {
     formData.append("photo", selectedFile);
 
     try {
-      const response = await axios.post("http://localhost:4900/api/users/upload-photo", formData, {
+      const response = await axios.post(`${API_BASE_URL}/api/users/upload-photo`, formData, {
         headers: {
           "Content-Type": "multipart/form-data"
         }
