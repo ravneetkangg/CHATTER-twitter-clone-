@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './Tweet.css';
-// import { FcLike } from "react-icons/fc";
-import { FcLikePlaceholder } from "react-icons/fc";
-import { FaRegBookmark } from "react-icons/fa";
-// import { FaBookmark } from "react-icons/fa";
-
-
+import { FcLike, FcLikePlaceholder } from "react-icons/fc";
+import { FaRegBookmark, FaRegComment } from "react-icons/fa";
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
 const formatDate = (dateString) => {
     const options = {
@@ -20,14 +17,21 @@ const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString(undefined, options);
 };
 
-const Tweet = ({ tweet, user, tweetedAt, user_id }) => {
+const Tweet = ({ tweet, user, tweetedAt, user_id, tweet_id, likes = [] }) => {
     const [profilePic, setProfilePic] = useState(null);
+    const [liked, setLiked] = useState(false);
+    const userInfo = JSON.parse(sessionStorage.getItem('user'));
+    const currentUserId = userInfo?._id;
 
+    useEffect(() => {
+        // Check if the tweet is liked by current user
+        setLiked(likes.includes(currentUserId));
+    }, [likes, currentUserId]);
 
     useEffect(() => {
         const fetchProfilePic = async () => {
             try {
-                const response = await axios.get(`https://chatter-zan2.onrender.com/api/users/get-photo/${user_id}`, {
+                const response = await axios.get(`${API_BASE_URL}/api/users/get-photo/${user_id}`, {
                     responseType: 'arraybuffer'
                 });
                 const base64Flag = `data:${response.headers['content-type']};base64,`;
@@ -51,6 +55,22 @@ const Tweet = ({ tweet, user, tweetedAt, user_id }) => {
         return window.btoa(binary);
     };
 
+    const handleLike = async () => {
+        try {
+            if (!currentUserId) return;
+
+            const url = liked
+                ? `http://localhost:4900/api/tweets/unlike/${tweet_id}`
+                : `http://localhost:4900/api/tweets/like/${tweet_id}`;
+
+            await axios.put(url, { userId: currentUserId });
+
+            setLiked(!liked); // toggle local like state
+        } catch (error) {
+            console.error("Error toggling like:", error);
+        }
+    };
+
     return (
         <div className="tweet-card">
             <div className="tweet-user-info">
@@ -66,9 +86,14 @@ const Tweet = ({ tweet, user, tweetedAt, user_id }) => {
             </div>
             <div className="tweet-content">{tweet}</div>
             <div className="tweet-reactions">
-                  <FcLikePlaceholder className='like-button' />
+                {liked ? (
+                    <FcLike className='like-button' onClick={handleLike} />
+                ) : (
+                    <FcLikePlaceholder className='like-button' onClick={handleLike} />
+                )}
 
-                  <FaRegBookmark className='save-button'/>
+                <FaRegComment className="comment-button" />
+                <FaRegBookmark className='save-button' />
             </div>
         </div>
     );

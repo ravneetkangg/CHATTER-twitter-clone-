@@ -5,6 +5,18 @@ const router = express.Router();
 const Tweet = require('../models/Tweet');
 const User = require('../models/User');
 
+
+// GET All tweets
+router.get('/tweets', async(req, res) => {
+    try {
+        const tweets = await Tweet.find().sort({ createdAt: -1 }).populate('email', 'email');
+        res.status(200).json(tweets);
+    } catch (error) {
+        console.error("Error fetching tweets:", error);
+        res.status(500).json({ message: "Error fetching tweets" });
+    }
+});
+
 // POST route to create a new tweet
 router.post('/create', async(req, res) => {
     try {
@@ -31,14 +43,110 @@ router.post('/create', async(req, res) => {
     }
 });
 
-// GET route to fetch all tweets sorted by createdAt in descending order (latest first)
-router.get('/tweets', async(req, res) => {
+
+// DELETE /delete/:tweetId
+router.delete('/delete/:tweetId', async(req, res) => {
     try {
-        const tweets = await Tweet.find().sort({ createdAt: -1 }).populate('email', 'email');
-        res.status(200).json(tweets);
+        const { userId } = req.body; // assuming only the tweet owner can delete
+
+        const tweet = await Tweet.findById(req.params.tweetId);
+        if (!tweet) return res.status(404).json({ message: "Tweet not found" });
+
+        if (tweet.email.toString() !== userId) {
+            return res.status(403).json({ message: "Unauthorized: not your tweet" });
+        }
+
+        await Tweet.findByIdAndDelete(req.params.tweetId);
+
+        await User.findByIdAndUpdate(userId, {
+            $pull: { tweets: req.params.tweetId }
+        });
+
+        res.status(200).json({ message: "Tweet deleted successfully" });
     } catch (error) {
-        console.error("Error fetching tweets:", error);
-        res.status(500).json({ message: "Error fetching tweets" });
+        console.error("Error deleting tweet:", error);
+        res.status(500).json({ message: "Error deleting tweet" });
+    }
+});
+
+
+
+// PUT /like/:tweetId
+router.put('/like/:tweetId', async(req, res) => {
+    try {
+        const { userId } = req.body; // expecting userId in body
+        const tweet = await Tweet.findById(req.params.tweetId);
+
+        if (!tweet) return res.status(404).json({ message: "Tweet not found" });
+
+        if (!tweet.likes.includes(userId)) {
+            tweet.likes.push(userId);
+            await tweet.save();
+        }
+
+        res.status(200).json({ message: "Tweet liked successfully" });
+    } catch (error) {
+        console.error("Error liking tweet:", error);
+        res.status(500).json({ message: "Error liking tweet" });
+    }
+});
+
+
+// PUT /unlike/:tweetId
+router.put('/unlike/:tweetId', async(req, res) => {
+    try {
+        const { userId } = req.body;
+        const tweet = await Tweet.findById(req.params.tweetId);
+
+        if (!tweet) return res.status(404).json({ message: "Tweet not found" });
+
+        tweet.likes = tweet.likes.filter(id => id.toString() !== userId);
+        await tweet.save();
+
+        res.status(200).json({ message: "Tweet unliked successfully" });
+    } catch (error) {
+        console.error("Error unliking tweet:", error);
+        res.status(500).json({ message: "Error unliking tweet" });
+    }
+});
+
+
+// POST /comment/:tweetId
+router.post('/comment/:tweetId', async(req, res) => {
+    try {
+        const { userId, comment } = req.body;
+
+        const tweet = await Tweet.findById(req.params.tweetId);
+        if (!tweet) return res.status(404).json({ message: "Tweet not found" });
+
+        tweet.comments.push({ user: userId, comment });
+        await tweet.save();
+
+        res.status(200).json({ message: "Comment added successfully", comments: tweet.comments });
+    } catch (error) {
+        console.error("Error adding comment:", error);
+        res.status(500).json({ message: "Error adding comment" });
+    }
+});
+
+
+// GET /comments/:tweetId
+router.get('/comments/:tweetId', async(req, res) => {
+    try {
+        const tweet = await Tweet.findById(req.params.tweetId)
+            .populate('comments.user', 'email') // Optional: populate user email
+
+        if (!tweet) {
+            return res.status(404).json({ message: "Tweet not found" });
+        }
+
+        res.status(200).json({
+            message: "Comments fetched successfully",
+            comments: tweet.comments
+        });
+    } catch (error) {
+        console.error("Error fetching comments:", error);
+        res.status(500).json({ message: "Error fetching comments" });
     }
 });
 

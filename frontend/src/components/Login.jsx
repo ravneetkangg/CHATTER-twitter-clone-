@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // Import Link
 import axios from 'axios';
 import "./Login.css";
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
 const Login = () => {
     const [inputs, setInputs] = useState({ email: '', password: '' });
@@ -16,7 +17,7 @@ const Login = () => {
         e.preventDefault();
         
         try {
-            const response = await axios.post('https://chatter-zan2.onrender.com/api/users/login', {
+            const response = await axios.post(`${API_BASE_URL}/api/users/login`, {
                 email: inputs.email,
                 password: inputs.password
             });

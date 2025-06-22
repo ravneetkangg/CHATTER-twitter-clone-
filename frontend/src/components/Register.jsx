@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import "./Register.css";
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
 const Register = () => {
     const [inputs, setInputs] = useState({ email: '', password: '' });
@@ -16,7 +17,7 @@ const Register = () => {
         event.preventDefault();
         
         try {
-            const response = await axios.post('https://chatter-zan2.onrender.com/api/users/register', {
+            const response = await axios.post(`${API_BASE_URL}/api/users/register`, {
                 email: inputs.email,
                 password: inputs.password
             });
