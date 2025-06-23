@@ -50,7 +50,7 @@ const Profile = () => {
       <div className="profile-wrapper">
         <div className="profile-photo">
           <img
-            src={`${API_BASE_URL}/api/users/get-photo/${user._id}`}
+            src={userInfo.photo}
             alt="Profile"
           />
         </div>
@@ -105,10 +105,12 @@ const Profile = () => {
                   <div className="user-info-row">
                     <div className="user-left">
                       <img
-                        src={`${API_BASE_URL}/api/users/get-photo/${u._id}`}
+                        src={`https://chatter-profile-pics.s3.ap-south-1.amazonaws.com/profile-pics/${u._id}.jpeg`}
                         alt="User"
                         className="modal-user-photo"
                       />
+
+
                       <p className="user-email">{u.email}</p>
                     </div>
                     <button className="unfollow-btn">Unfollow</button>

@@ -5,6 +5,10 @@ const router = express.Router();
 const User = require('../models/User');
 const formidable = require('express-formidable');
 const fs = require('fs');
+const {
+    uploadPhotoController,
+    uploadMiddleware
+} = require('../controllers/userController');
 
 // Register user
 router.post('/register', async(req, res) => {
@@ -54,6 +58,7 @@ router.post('/login', async(req, res) => {
         // If login successful, return user data (excluding sensitive info like password)
         res.status(200).json({
             _id: user._id,
+            photo: user.photo,
             email: user.email,
             createdAt: user.createdAt,
             updatedAt: user.updatedAt,
@@ -91,59 +96,7 @@ router.get('/:id', async(req, res) => {
     }
 });
 
-
-// Route to upload profile picture
-router.post('/upload-photo', formidable(), async(req, res) => {
-    try {
-        const { email } = req.fields;
-        const { photo } = req.files;
-
-        if (!email) {
-            return res.status(500).send({ error: "Email is required" });
-        }
-        if (!photo) {
-            return res.status(500).send({ error: "Photo is required" });
-        }
-
-        const user = await User.findOne({ email });
-        if (!user) {
-            return res.status(404).send({ error: "User not found" });
-        }
-
-        if (photo) {
-            user.photo.data = fs.readFileSync(photo.path);
-            user.photo.contentType = photo.type;
-        }
-
-        await user.save();
-        res.status(201).send({
-            success: true,
-            message: 'Profile picture uploaded successfully'
-        });
-    } catch (error) {
-        console.error("Error updating profile picture:", error);
-        res.status(500).json({ message: "Server error" });
-    }
-});
-
-// Route to get profile picture by user ID
-router.get('/get-photo/:id', async(req, res) => {
-    try {
-        const { id } = req.params;
-
-        const user = await User.findById(id);
-
-        if (!user || !user.photo || !user.photo.data) {
-            return res.send({ error: "User or photo not found" });
-        }
-
-        res.set('Content-Type', user.photo.contentType);
-        res.send(user.photo.data);
-    } catch (error) {
-        console.error("Error fetching profile picture:", error);
-        res.status(500).json({ message: "Server error" });
-    }
-});
+router.post('/upload-photo', uploadMiddleware, uploadPhotoController);
 
 
 

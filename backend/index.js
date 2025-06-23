@@ -1,6 +1,7 @@
 // backend/server.js
 const express = require('express');
 const cors = require('cors'); // Import cors
+require('dotenv').config();
 
 const dbConnect = require('./config/db');
 const userRoutes = require('./routes/userRoutes');
