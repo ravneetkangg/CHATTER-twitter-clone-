@@ -1,14 +1,15 @@
-// backend/config/db.js
 const mongoose = require("mongoose");
+require("dotenv").config();
+require("colors");
 
 const dbConnect = () => {
-    mongoose.connect("mongodb+srv://ravneetkang2003:Qub96c6xBOb9nkak@cluster0.tdraycq.mongodb.net/ChopX")
-        .then(() => console.log("DB connection is successful"))
+    mongoose.connect(process.env.MONGODB_URL)
+        .then(() => console.log("DB connection is successful".green.bold))
         .catch((error) => {
-            console.log("Issue in DB connection");
-            console.error(error.message);
+            console.log("Issue in DB connection".red.bold);
+            console.error(error.message.red);
             process.exit(1);
         });
-}
+};
 
 module.exports = dbConnect;

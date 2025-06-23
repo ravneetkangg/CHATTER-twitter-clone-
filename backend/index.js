@@ -1,7 +1,8 @@
 // backend/server.js
 const express = require('express');
-const cors = require('cors'); // Import cors
+const cors = require('cors');
 require('dotenv').config();
+require('colors');
 
 const dbConnect = require('./config/db');
 const userRoutes = require('./routes/userRoutes');
@@ -22,5 +23,5 @@ app.get('/', (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`Server started on port ${PORT}`);
+    console.log(`Server started on port ${PORT}`.green.bold);
 });
