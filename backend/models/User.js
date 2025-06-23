@@ -8,7 +8,16 @@ const userSchema = new mongoose.Schema({
         data: Buffer,
         contentType: String
     },
-    tweets: [{ type: mongoose.Schema.Types.ObjectId, ref: "Tweet" }]
+    tweets: [{ type: mongoose.Schema.Types.ObjectId, ref: "Tweet" }],
+    followers: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    following: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+
+    address: {
+        type: String,
+        maxlength: 50,
+        trim: true
+    },
+    dob: { type: Date }
 }, { timestamps: true });
 
 module.exports = mongoose.model("User", userSchema);

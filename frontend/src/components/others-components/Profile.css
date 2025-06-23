@@ -1,0 +1,219 @@
+/* === Page Layout === */
+
+.profile-page {
+    padding: 100px 0 60px;
+    /* 👈 add top padding to push below navbar */
+    width: 100vw;
+    background-color: #f5f8fa;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    /* 👈 align to top instead of center */
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+.profile-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: white;
+    padding: 30px 40px;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+    width: 90%;
+    max-width: 1100px;
+    gap: 40px;
+    flex-wrap: wrap;
+}
+
+
+/* === Profile Photo === */
+
+.profile-photo img {
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+    border: 3px solid #1da1f2;
+    object-fit: cover;
+    box-shadow: 0 4px 12px rgba(29, 161, 242, 0.3);
+}
+
+
+/* === Profile Details === */
+
+.profile-details {
+    flex: 1;
+    min-width: 260px;
+}
+
+.profile-details h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #222;
+    margin-bottom: 10px;
+}
+
+.profile-details p {
+    font-size: 1rem;
+    color: #444;
+    margin: 4px 0;
+}
+
+
+/* === Follower Stats === */
+
+.follow-stats {
+    display: flex;
+    gap: 30px;
+    margin-top: 20px;
+}
+
+.follow-stats div {
+    text-align: center;
+    cursor: pointer;
+    padding: 10px 20px;
+    border-radius: 8px;
+    background-color: #f0f8ff;
+    transition: background 0.2s ease;
+}
+
+.follow-stats div:hover {
+    background-color: #e2f3ff;
+}
+
+.follow-stats p {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #1da1f2;
+    margin: 0;
+}
+
+.follow-stats span {
+    display: block;
+    font-size: 0.9rem;
+    color: #555;
+}
+
+
+/* === Modal === */
+
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-box {
+    background: white;
+    width: 90%;
+    max-width: 400px;
+    max-height: 80vh;
+    border-radius: 10px;
+    padding: 1.5rem 1rem 1rem;
+    position: relative;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 1.5rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.modal-user-list {
+    overflow-y: auto;
+    flex: 1;
+    margin-top: 1rem;
+    padding-right: 6px;
+}
+
+.modal-user-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.modal-user-list::-webkit-scrollbar-thumb {
+    background-color: #bbb;
+    border-radius: 10px;
+}
+
+.user-modal-card {
+    width: 100%;
+}
+
+.user-info-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.user-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+}
+
+.modal-user-photo {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #ccc;
+}
+
+.user-email {
+    max-width: 180px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-size: 0.95rem;
+    color: #333;
+}
+
+.unfollow-btn {
+    background-color: #e02424;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: background-color 0.3s ease;
+}
+
+.unfollow-btn:hover {
+    background-color: #c81e1e;
+}
+
+.more-btn {
+    margin-top: 1rem;
+    align-self: center;
+    background-color: black;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease;
+}
+
+.more-btn:hover {
+    background-color: #333;
+}

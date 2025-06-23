@@ -57,10 +57,37 @@ router.post('/login', async(req, res) => {
             email: user.email,
             createdAt: user.createdAt,
             updatedAt: user.updatedAt,
-            tweets: user.tweets
+            tweets: user.tweets,
+            followers: user.followers,
+            following: user.following,
+            address: user.address,
+            dob: user.dob
         });
     } catch (error) {
         res.status(500).json({ message: "Error logging in user" });
+    }
+});
+
+// Get user details by ID (excluding photo)
+router.get('/:id', async(req, res) => {
+    try {
+        const user = await User.findById(req.params.id)
+            .select('-photo') // 👈 Exclude the 'photo' field
+            .populate('followers', 'email')
+            .populate('following', 'email')
+            .populate({
+                path: 'tweets',
+                select: 'tweet createdAt'
+            });
+
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        res.status(200).json(user);
+    } catch (error) {
+        console.error('Error fetching user details:', error);
+        res.status(500).json({ error: 'Internal server error' });
     }
 });
 
@@ -117,5 +144,99 @@ router.get('/get-photo/:id', async(req, res) => {
         res.status(500).json({ message: "Server error" });
     }
 });
+
+
+
+// Follow a user
+router.put('/follow/:id', async(req, res) => {
+    try {
+        const { followerId } = req.body; // ID of the one who is following
+        const { id: followeeId } = req.params; // ID of the one being followed
+
+        if (followerId === followeeId) {
+            return res.status(400).json({ message: "You cannot follow yourself" });
+        }
+
+        const follower = await User.findById(followerId);
+        const followee = await User.findById(followeeId);
+
+        if (!follower || !followee) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        // Only add if not already following
+        if (!followee.followers.includes(followerId)) {
+            followee.followers.push(followerId);
+            await followee.save();
+        }
+
+        if (!follower.following.includes(followeeId)) {
+            follower.following.push(followeeId);
+            await follower.save();
+        }
+
+        res.status(200).json({ message: "Followed successfully" });
+    } catch (error) {
+        res.status(500).json({ message: "Error following user" });
+    }
+});
+
+
+// Unfollow a user
+router.put('/unfollow/:id', async(req, res) => {
+    try {
+        const { followerId } = req.body;
+        const { id: followeeId } = req.params;
+
+        const follower = await User.findById(followerId);
+        const followee = await User.findById(followeeId);
+
+        if (!follower || !followee) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        followee.followers = followee.followers.filter(id => id.toString() !== followerId);
+        follower.following = follower.following.filter(id => id.toString() !== followeeId);
+
+        await followee.save();
+        await follower.save();
+
+        res.status(200).json({ message: "Unfollowed successfully" });
+    } catch (error) {
+        res.status(500).json({ message: "Error unfollowing user" });
+    }
+});
+
+
+// Update DOB
+router.put('/update-dob/:id', async(req, res) => {
+    try {
+        const { dob } = req.body;
+        const user = await User.findByIdAndUpdate(req.params.id, { dob }, { new: true });
+
+        if (!user) return res.status(404).json({ message: "User not found" });
+
+        res.status(200).json({ message: "DOB updated", user });
+    } catch (error) {
+        res.status(500).json({ message: "Error updating DOB" });
+    }
+});
+
+
+
+// Update Address
+router.put('/update-address/:id', async(req, res) => {
+    try {
+        const { address } = req.body;
+        const user = await User.findByIdAndUpdate(req.params.id, { address }, { new: true });
+
+        if (!user) return res.status(404).json({ message: "User not found" });
+
+        res.status(200).json({ message: "Address updated", user });
+    } catch (error) {
+        res.status(500).json({ message: "Error updating address" });
+    }
+});
+
 
 module.exports = router;

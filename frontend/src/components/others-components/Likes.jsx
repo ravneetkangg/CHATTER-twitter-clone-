@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import Navbar from '../Navbar';
 import Tweet from '../Tweet';
 import axios from 'axios';
 import './Likes.css';
@@ -25,7 +24,6 @@ const Likes = ({ handleLogout }) => {
 
   return (
     <>
-      <Navbar handleLogout={handleLogout} />
       <div className="main-container">
         <div className="tweets-container">
           <h2 className="likes-heading">Liked Tweets</h2>

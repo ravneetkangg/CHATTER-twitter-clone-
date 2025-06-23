@@ -1,5 +1,6 @@
 // import './App.css';
 import React from 'react';
+import "./App.css"
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Register from './components/Register';
 import Navbar from './components/Navbar';
@@ -8,6 +9,8 @@ import Home from './components/Home';
 import StarRoute from './components/StarRoute';
 import Likes from './components/others-components/Likes';
 import Saved from './components/others-components/Saved';
+import Profile from './components/others-components/Profile';
+
 
 function App() {
   return (
@@ -21,6 +24,7 @@ function App() {
           <Route path="/home" element={<Home />} />
           <Route path="/liked" element={<Likes />} />
           <Route path="/saved" element={<Saved />} />
+          <Route path="/profile" element={<Profile />} />
           <Route path="*" element={<StarRoute />} />
         </Routes>
       </Router>
