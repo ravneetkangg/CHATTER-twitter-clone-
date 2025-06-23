@@ -1,0 +1,112 @@
+/* === Edit Profile Page Full Width === */
+
+.edit-profile-page {
+    padding: 100px 0 60px;
+    background-color: #f5f8fa;
+    min-height: 100vh;
+    width: 100vw;
+}
+
+.edit-profile-wrapper {
+    width: 100%;
+    max-width: 100%;
+    padding: 40px 60px;
+    background-color: white;
+    box-sizing: border-box;
+    border-top: 2px solid #e2e2e2;
+    border-bottom: 2px solid #e2e2e2;
+}
+
+.edit-profile-wrapper h2 {
+    font-size: 2rem;
+    margin-bottom: 30px;
+    color: #1d1d1f;
+}
+
+.edit-profile-wrapper label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: #333;
+}
+
+.edit-input {
+    width: 100%;
+    padding: 14px;
+    margin-bottom: 25px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
+    background-color: #fefefe;
+    box-sizing: border-box;
+    transition: border 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+}
+
+
+/* === Improved Date Picker Styling === */
+
+input[type="date"].edit-input {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    color: #333;
+    background-color: #fefefe;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+input[type="date"].edit-input:hover {
+    border-color: #1da1f2;
+}
+
+input[type="date"].edit-input:focus {
+    outline: none;
+    border-color: #1da1f2;
+    box-shadow: 0 0 0 3px rgba(29, 161, 242, 0.2);
+}
+
+input[type="date"].edit-input::-webkit-calendar-picker-indicator {
+    color: #1da1f2;
+    filter: invert(40%);
+    cursor: pointer;
+    margin-left: 4px;
+}
+
+
+/* === Action Buttons === */
+
+.edit-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.cancel-btn,
+.save-btn {
+    padding: 12px 22px;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.cancel-btn {
+    background-color: #e0e0e0;
+    color: #333;
+}
+
+.save-btn {
+    background-color: #1da1f2;
+    color: white;
+}
+
+.cancel-btn:hover {
+    background-color: #c7c7c7;
+}
+
+.save-btn:hover {
+    background-color: #0d8ddb;
+}

@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { FaEdit, FaCalendarAlt, FaMapMarkerAlt, FaBirthdayCake } from "react-icons/fa";
+
 import "./Profile.css";
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
@@ -54,11 +56,16 @@ const Profile = () => {
         </div>
         <div className="profile-details">
           <h2>{user.email}</h2>
-          <p>📅 Joined: {new Date(user.createdAt).toLocaleDateString()}</p>
-          {user.address && <p>📍 {user.address}</p>}
-          {user.dob && (
-            <p>🎂 DOB: {new Date(user.dob).toLocaleDateString("en-GB")}</p>
+          <p><FaCalendarAlt style={{ marginRight: "6px" }} />Joined: {new Date(user.createdAt).toLocaleDateString()}</p>
+
+          {user.address && (
+            <p><FaMapMarkerAlt style={{ marginRight: "6px" }} />{user.address}</p>
           )}
+
+          {user.dob && (
+            <p><FaBirthdayCake style={{ marginRight: "6px" }} />DOB: {new Date(user.dob).toLocaleDateString("en-GB")}</p>
+          )}
+
           <div className="follow-stats">
             <div className="clickable">
               <p>{user.tweets?.length || 0}</p>
@@ -74,6 +81,16 @@ const Profile = () => {
             </div>
           </div>
         </div>
+        <div className="edit-btn-wrapper">
+          <button
+            className="edit-profile-btn"
+            onClick={() => window.location.href = "/profile/edit"}
+          >
+            <FaEdit style={{ marginRight: "6px" }} />
+            Edit Profile
+          </button>
+        </div>
+
       </div>
 
       {showModal && (

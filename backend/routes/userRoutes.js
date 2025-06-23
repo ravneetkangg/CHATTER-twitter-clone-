@@ -208,35 +208,25 @@ router.put('/unfollow/:id', async(req, res) => {
 });
 
 
-// Update DOB
-router.put('/update-dob/:id', async(req, res) => {
+// Update DOB and Address together
+router.put('/update-profile/:id', async(req, res) => {
     try {
-        const { dob } = req.body;
-        const user = await User.findByIdAndUpdate(req.params.id, { dob }, { new: true });
+        const { dob, address } = req.body;
+        const updateFields = {};
+        if (dob) updateFields.dob = dob;
+        if (address) updateFields.address = address;
+
+        const user = await User.findByIdAndUpdate(req.params.id, updateFields, { new: true });
 
         if (!user) return res.status(404).json({ message: "User not found" });
 
-        res.status(200).json({ message: "DOB updated", user });
+        res.status(200).json({ message: "Profile updated", user });
     } catch (error) {
-        res.status(500).json({ message: "Error updating DOB" });
+        console.error(error);
+        res.status(500).json({ message: "Error updating profile" });
     }
 });
 
-
-
-// Update Address
-router.put('/update-address/:id', async(req, res) => {
-    try {
-        const { address } = req.body;
-        const user = await User.findByIdAndUpdate(req.params.id, { address }, { new: true });
-
-        if (!user) return res.status(404).json({ message: "User not found" });
-
-        res.status(200).json({ message: "Address updated", user });
-    } catch (error) {
-        res.status(500).json({ message: "Error updating address" });
-    }
-});
 
 
 module.exports = router;

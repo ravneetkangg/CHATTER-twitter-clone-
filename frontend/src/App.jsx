@@ -10,6 +10,7 @@ import StarRoute from './components/StarRoute';
 import Likes from './components/others-components/Likes';
 import Saved from './components/others-components/Saved';
 import Profile from './components/others-components/Profile';
+import EditProfile from './components/others-components/EditProfile';
 
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
           <Route path="/liked" element={<Likes />} />
           <Route path="/saved" element={<Saved />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/profile/edit" element={<EditProfile />} />
           <Route path="*" element={<StarRoute />} />
         </Routes>
       </Router>
