@@ -3,7 +3,6 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const router = express.Router();
 const User = require('../models/User');
-const formidable = require('express-formidable');
 const fs = require('fs');
 const {
     uploadPhotoController,
