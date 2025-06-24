@@ -1,47 +1,98 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { FaEdit, FaCalendarAlt, FaMapMarkerAlt, FaBirthdayCake } from "react-icons/fa";
+import {
+  FaEdit,
+  FaCalendarAlt,
+  FaMapMarkerAlt,
+  FaBirthdayCake,
+} from "react-icons/fa";
 import { Link } from "react-router-dom";
 
 import "./Profile.css";
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
 const Profile = () => {
   const [user, setUser] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState("");
   const [modalUsers, setModalUsers] = useState([]);
-  const [currentModalIndex, setCurrentModalIndex] = useState(0);
+  const [displayCount, setDisplayCount] = useState(5);
+  const [modalType, setModalType] = useState("");
+
   const userInfo = JSON.parse(sessionStorage.getItem("user"));
   const userId = userInfo?._id;
 
-  useEffect(() => {
+  const fetchUser = () => {
     if (userId) {
       axios
         .get(`${API_BASE_URL}/api/users/${userId}`)
         .then((res) => setUser(res.data))
         .catch((err) => console.error("Error fetching user:", err));
     }
+  };
+
+  useEffect(() => {
+    fetchUser();
   }, [userId]);
 
   const openModal = (type) => {
     if (!user) return;
+    setModalType(type);
     setModalTitle(type === "followers" ? "Followers" : "Following");
-    setModalUsers(type === "followers" ? user.followers : user.following);
-    setCurrentModalIndex(0); // reset index
+
+    if (type === "followers") {
+      // For each follower, mark whether we (current user) follow them back
+      const enrichedFollowers = user.followers.map((follower) => ({
+        ...follower,
+        isFollowing: user.following.some((f) => f._id === follower._id),
+      }));
+      setModalUsers(enrichedFollowers);
+    } else {
+      // Default: All following are followed
+      const enrichedFollowing = user.following.map((f) => ({
+        ...f,
+        isFollowing: true,
+      }));
+      setModalUsers(enrichedFollowing);
+    }
+
+    setDisplayCount(5);
     setShowModal(true);
   };
 
-  const showNextUser = () => {
-    setCurrentModalIndex((prev) =>
-      prev < modalUsers.length - 1 ? prev + 1 : prev
-    );
+  const showNextUsers = () => {
+    setDisplayCount((prev) => Math.min(prev + 5, modalUsers.length));
   };
 
   const closeModal = () => {
     setShowModal(false);
     setModalUsers([]);
+    setDisplayCount(5);
+    fetchUser(); // Refresh updated follow states
+  };
+
+  const handleFollowToggle = async (targetUserId, currentlyFollowing) => {
+    try {
+      if (currentlyFollowing) {
+        await axios.put(`${API_BASE_URL}/api/users/unfollow/${targetUserId}`, {
+          followerId: userId,
+        });
+      } else {
+        await axios.put(`${API_BASE_URL}/api/users/follow/${targetUserId}`, {
+          followerId: userId,
+        });
+      }
+
+      // Update modalUsers follow state
+      setModalUsers((prev) =>
+        prev.map((u) =>
+          u._id === targetUserId ? { ...u, isFollowing: !currentlyFollowing } : u
+        )
+      );
+    } catch (err) {
+      console.error("Follow/Unfollow Error:", err);
+    }
   };
 
   if (!user) return <div className="loading">Loading profile...</div>;
@@ -50,21 +101,28 @@ const Profile = () => {
     <div className="profile-page">
       <div className="profile-wrapper">
         <div className="profile-photo">
-          <img
-            src={userInfo.photo}
-            alt="Profile"
-          />
+          <img src={userInfo.photo} alt="Profile" />
         </div>
+
         <div className="profile-details">
           <h2>{user.email}</h2>
-          <p><FaCalendarAlt style={{ marginRight: "6px" }} />Joined: {new Date(user.createdAt).toLocaleDateString()}</p>
+          <p>
+            <FaCalendarAlt style={{ marginRight: "6px" }} />
+            Joined: {new Date(user.createdAt).toLocaleDateString()}
+          </p>
 
           {user.address && (
-            <p><FaMapMarkerAlt style={{ marginRight: "6px" }} />{user.address}</p>
+            <p>
+              <FaMapMarkerAlt style={{ marginRight: "6px" }} />
+              {user.address}
+            </p>
           )}
 
           {user.dob && (
-            <p><FaBirthdayCake style={{ marginRight: "6px" }} />DOB: {new Date(user.dob).toLocaleDateString("en-GB")}</p>
+            <p>
+              <FaBirthdayCake style={{ marginRight: "6px" }} />
+              DOB: {new Date(user.dob).toLocaleDateString("en-GB")}
+            </p>
           )}
 
           <div className="follow-stats">
@@ -82,26 +140,28 @@ const Profile = () => {
             </div>
           </div>
         </div>
+
         <div className="edit-btn-wrapper">
           <button
             className="edit-profile-btn"
-            onClick={() => window.location.href = "/profile/edit"}
+            onClick={() => (window.location.href = "/profile/edit")}
           >
             <FaEdit style={{ marginRight: "6px" }} />
             Edit Profile
           </button>
         </div>
-
       </div>
 
       {showModal && (
         <div className="modal-backdrop">
           <div className="modal-box">
             <h3>{modalTitle}</h3>
-            <button className="close-btn" onClick={closeModal}>×</button>
+            <button className="close-btn" onClick={closeModal}>
+              ×
+            </button>
 
             <div className="modal-user-list">
-              {modalUsers.slice(0, currentModalIndex + 1).map((u, idx) => (
+              {modalUsers.slice(0, displayCount).map((u, idx) => (
                 <div key={idx} className="user-modal-card">
                   <div className="user-info-row">
                     <div className="user-left">
@@ -110,8 +170,6 @@ const Profile = () => {
                         alt="User"
                         className="modal-user-photo"
                       />
-
-
                       <Link
                         to={`/user/${encodeURIComponent(u.email)}`}
                         className="user-email"
@@ -119,14 +177,24 @@ const Profile = () => {
                         {u.email}
                       </Link>
                     </div>
-                    <button className="unfollow-btn">Unfollow</button>
+
+                    <button
+                      className={u.isFollowing ? "unfollow-btn" : "follow-btn"}
+                      onClick={() =>
+                        handleFollowToggle(u._id, u.isFollowing)
+                      }
+                    >
+                      {u.isFollowing ? "Unfollow" : "Follow"}
+                    </button>
                   </div>
                 </div>
               ))}
             </div>
 
-            {currentModalIndex < modalUsers.length - 1 && (
-              <button className="more-btn" onClick={showNextUser}>More</button>
+            {displayCount < modalUsers.length && (
+              <button className="more-btn" onClick={showNextUsers}>
+                More
+              </button>
             )}
           </div>
         </div>

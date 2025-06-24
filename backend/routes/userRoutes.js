@@ -88,11 +88,11 @@ router.get("/search", async(req, res) => {
     }
 });
 
-// Get user details by ID (excluding photo)
+// Get user details by ID
 router.get('/:id', async(req, res) => {
     try {
         const user = await User.findById(req.params.id)
-            .select('-photo') // 👈 Exclude the 'photo' field
+            .select('-password')
             .populate('followers', 'email')
             .populate('following', 'email')
             .populate({
