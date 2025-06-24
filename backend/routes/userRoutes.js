@@ -1,9 +1,7 @@
-// backend/routes/userRoutes.js
 const express = require('express');
 const bcrypt = require('bcrypt');
 const router = express.Router();
 const User = require('../models/User');
-const fs = require('fs');
 const {
     uploadPhotoController,
     uploadMiddleware
@@ -125,7 +123,6 @@ router.get("/by-email/:email", async(req, res) => {
 
 
 router.post('/upload-photo', uploadMiddleware, uploadPhotoController);
-
 
 
 // Follow a user

@@ -241,3 +241,31 @@
 .edit-profile-btn:hover {
     background-color: #0d8de0;
 }
+
+.follow-btn,
+.unfollow-btn {
+    padding: 10px 20px;
+    font-size: 0.95rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.follow-btn {
+    background-color: #1da1f2;
+    color: white;
+}
+
+.follow-btn:hover {
+    background-color: #0d8de0;
+}
+
+.unfollow-btn {
+    background-color: #e02424;
+    color: white;
+}
+
+.unfollow-btn:hover {
+    background-color: #c81e1e;
+}

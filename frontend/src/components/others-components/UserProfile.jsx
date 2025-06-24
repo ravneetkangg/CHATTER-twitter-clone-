@@ -13,18 +13,62 @@ const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
 const UserProfile = () => {
   const { email } = useParams();
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(null); // Profile being viewed
+  const [isFollowing, setIsFollowing] = useState(false);
+  const [loggedInUserId, setLoggedInUserId] = useState(null);
 
   useEffect(() => {
+    const loggedInUser = JSON.parse(sessionStorage.getItem("user"));
+    if (loggedInUser) {
+      setLoggedInUserId(loggedInUser._id);
+    }
+
     if (email) {
       axios
         .get(`${API_BASE_URL}/api/users/by-email/${email}`)
-        .then((res) => setUser(res.data))
+        .then((res) => {
+          setUser(res.data);
+          if (loggedInUser && res.data.followers.includes(loggedInUser._id)) {
+            setIsFollowing(true);
+          }
+        })
         .catch((err) => console.error("Error fetching user:", err));
     }
   }, [email]);
 
+  const handleFollow = async () => {
+    try {
+      await axios.put(`${API_BASE_URL}/api/users/follow/${user._id}`, {
+        followerId: loggedInUserId,
+      });
+      setIsFollowing(true);
+      setUser((prev) => ({
+        ...prev,
+        followers: [...prev.followers, loggedInUserId],
+      }));
+    } catch (err) {
+      console.error("Error following user:", err);
+    }
+  };
+
+  const handleUnfollow = async () => {
+    try {
+      await axios.put(`${API_BASE_URL}/api/users/unfollow/${user._id}`, {
+        followerId: loggedInUserId,
+      });
+      setIsFollowing(false);
+      setUser((prev) => ({
+        ...prev,
+        followers: prev.followers.filter((id) => id !== loggedInUserId),
+      }));
+    } catch (err) {
+      console.error("Error unfollowing user:", err);
+    }
+  };
+
   if (!user) return <div className="loading">Loading user profile...</div>;
+
+  const isOwnProfile = user._id === loggedInUserId;
 
   return (
     <div className="profile-page">
@@ -71,6 +115,20 @@ const UserProfile = () => {
               <span>Following</span>
             </div>
           </div>
+
+          {!isOwnProfile && (
+            <div style={{ marginTop: "20px" }}>
+              {isFollowing ? (
+                <button className="unfollow-btn" onClick={handleUnfollow}>
+                  Unfollow
+                </button>
+              ) : (
+                <button className="follow-btn" onClick={handleFollow}>
+                  Follow
+                </button>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </div>
