@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import {
   FaEdit,
@@ -18,27 +18,26 @@ const Profile = () => {
   const [modalTitle, setModalTitle] = useState("");
   const [modalUsers, setModalUsers] = useState([]);
   const [displayCount, setDisplayCount] = useState(5);
-  const [modalType, setModalType] = useState("");
 
   const userInfo = JSON.parse(sessionStorage.getItem("user"));
   const userId = userInfo?._id;
 
-  const fetchUser = () => {
+  const fetchUser = useCallback(() => {
     if (userId) {
       axios
         .get(`${API_BASE_URL}/api/users/${userId}`)
         .then((res) => setUser(res.data))
         .catch((err) => console.error("Error fetching user:", err));
     }
-  };
+  }, [userId]);
 
   useEffect(() => {
     fetchUser();
-  }, [userId]);
+  }, [fetchUser]);
+
 
   const openModal = (type) => {
     if (!user) return;
-    setModalType(type);
     setModalTitle(type === "followers" ? "Followers" : "Following");
 
     if (type === "followers") {
