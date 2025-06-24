@@ -101,3 +101,96 @@
     color: black;
     border: 1px solid black;
 }
+
+
+/* === Search Bar === */
+
+.nav-search {
+    position: relative;
+    margin-right: 24px;
+    flex: 1;
+    max-width: 260px;
+}
+
+.nav-search input {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 999px;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    background-color: #f9fafb;
+}
+
+.nav-search input:focus {
+    border-color: #1DA1F2;
+    box-shadow: 0 0 0 3px rgba(29, 161, 242, 0.15);
+    background-color: white;
+}
+
+
+/* === Dropdown Results === */
+
+.search-dropdown {
+    position: absolute;
+    top: 46px;
+    left: 0;
+    width: 100%;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-top: none;
+    border-radius: 0 0 12px 12px;
+    box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.08);
+    max-height: 250px;
+    overflow-y: auto;
+    z-index: 1000;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    animation: fadeIn 0.2s ease-in-out;
+}
+
+
+/* === Each Result Item === */
+
+.search-dropdown li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    font-size: 0.95rem;
+    color: #111827;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.search-dropdown li:hover {
+    background-color: #f0f9ff;
+}
+
+
+/* === Profile Image === */
+
+.search-dp {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #e5e7eb;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+
+/* === Animation === */
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

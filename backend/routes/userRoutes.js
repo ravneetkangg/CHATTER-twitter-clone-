@@ -72,6 +72,24 @@ router.post('/login', async(req, res) => {
     }
 });
 
+
+// Example in routes/user.js
+router.get("/search", async(req, res) => {
+    const query = req.query.query;
+    if (!query) return res.json([]);
+
+    try {
+        const users = await User.find({
+            email: { $regex: query, $options: "i" }
+        }).select("_id email");
+
+        res.json(users);
+    } catch (err) {
+        console.error("Search error:", err);
+        res.status(500).json({ message: "Server error" });
+    }
+});
+
 // Get user details by ID (excluding photo)
 router.get('/:id', async(req, res) => {
     try {
