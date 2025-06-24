@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import {
   FaCalendarAlt,
@@ -13,6 +13,8 @@ const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
 const UserProfile = () => {
   const { email } = useParams();
+  const navigate = useNavigate();
+
   const [user, setUser] = useState(null); // Profile being viewed
   const [isFollowing, setIsFollowing] = useState(false);
   const [loggedInUserId, setLoggedInUserId] = useState(null);
@@ -21,6 +23,12 @@ const UserProfile = () => {
     const loggedInUser = JSON.parse(sessionStorage.getItem("user"));
     if (loggedInUser) {
       setLoggedInUserId(loggedInUser._id);
+
+      // ✅ Check if user is accessing their own profile
+      if (email === loggedInUser.email) {
+        navigate("/profile"); // redirect
+        return;
+      }
     }
 
     if (email) {
@@ -34,7 +42,7 @@ const UserProfile = () => {
         })
         .catch((err) => console.error("Error fetching user:", err));
     }
-  }, [email]);
+  }, [email, navigate]);
 
   const handleFollow = async () => {
     try {
@@ -67,8 +75,6 @@ const UserProfile = () => {
   };
 
   if (!user) return <div className="loading">Loading user profile...</div>;
-
-  const isOwnProfile = user._id === loggedInUserId;
 
   return (
     <div className="profile-page">
@@ -116,19 +122,17 @@ const UserProfile = () => {
             </div>
           </div>
 
-          {!isOwnProfile && (
-            <div style={{ marginTop: "20px" }}>
-              {isFollowing ? (
-                <button className="unfollow-btn" onClick={handleUnfollow}>
-                  Unfollow
-                </button>
-              ) : (
-                <button className="follow-btn" onClick={handleFollow}>
-                  Follow
-                </button>
-              )}
-            </div>
-          )}
+          <div style={{ marginTop: "20px" }}>
+            {isFollowing ? (
+              <button className="unfollow-btn" onClick={handleUnfollow}>
+                Unfollow
+              </button>
+            ) : (
+              <button className="follow-btn" onClick={handleFollow}>
+                Follow
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </div>
