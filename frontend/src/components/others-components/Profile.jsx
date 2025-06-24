@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { FaEdit, FaCalendarAlt, FaMapMarkerAlt, FaBirthdayCake } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 import "./Profile.css";
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
@@ -111,7 +112,12 @@ const Profile = () => {
                       />
 
 
-                      <p className="user-email">{u.email}</p>
+                      <Link
+                        to={`/user/${encodeURIComponent(u.email)}`}
+                        className="user-email"
+                      >
+                        {u.email}
+                      </Link>
                     </div>
                     <button className="unfollow-btn">Unfollow</button>
                   </div>

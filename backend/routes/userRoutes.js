@@ -95,6 +95,17 @@ router.get('/:id', async(req, res) => {
     }
 });
 
+router.get("/by-email/:email", async(req, res) => {
+    try {
+        const user = await User.findOne({ email: decodeURIComponent(req.params.email) });
+        if (!user) return res.status(404).json({ message: "User not found" });
+        res.json(user);
+    } catch (err) {
+        res.status(500).json({ message: "Server error" });
+    }
+});
+
+
 router.post('/upload-photo', uploadMiddleware, uploadPhotoController);
 
 
