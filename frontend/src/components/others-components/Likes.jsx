@@ -24,9 +24,7 @@ const Likes = ({ handleLogout }) => {
 
   return (
     <>
-      <div className="main-container">
         <div className="tweets-container">
-          <h2 className="likes-heading">Liked Tweets</h2>
           {likedTweets.length > 0 ? (
             likedTweets.map((tweet, index) => (
               <Tweet
@@ -44,7 +42,6 @@ const Likes = ({ handleLogout }) => {
             <p className="no-likes-message">You haven’t liked any tweets yet.</p>
           )}
         </div>
-      </div>
     </>
   );
 };

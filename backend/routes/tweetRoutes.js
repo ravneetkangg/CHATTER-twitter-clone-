@@ -126,6 +126,24 @@ router.get('/liked/:userId', async(req, res) => {
 });
 
 
+// GET all tweets posted by a user
+router.get('/posted/:userId', async(req, res) => {
+    try {
+        const { userId } = req.params;
+
+        const userTweets = await Tweet.find({ email: userId }) // 'email' field stores userId
+            .populate('email', 'email') // populate to get user's email (optional)
+            .sort({ createdAt: -1 }); // optional: latest tweets first
+
+        res.status(200).json(userTweets);
+    } catch (error) {
+        console.error("Error fetching user's tweets:", error);
+        res.status(500).json({ message: "Failed to fetch user's tweets" });
+    }
+});
+
+
+
 
 // POST /comment/:tweetId
 router.post('/comment/:tweetId', async(req, res) => {

@@ -15,7 +15,7 @@ const Register = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        
+
         try {
             const response = await axios.post(`${API_BASE_URL}/api/users/register`, {
                 email: inputs.email,
@@ -43,27 +43,30 @@ const Register = () => {
 
     return (
         <>
-            <form className="register-form" onSubmit={handleSubmit}>
-                <h2>Register</h2>
-                <input
-                    type="email"
-                    name="email"
-                    placeholder="Email"
-                    value={inputs.email}
-                    onChange={handleChange}
-                    required
-                />
-                <input
-                    type="password"
-                    name="password"
-                    placeholder="Password"
-                    value={inputs.password}
-                    onChange={handleChange}
-                    required
-                />
-                <button type="submit">Register</button>
-                <p>Already have an account? <a href="/login">Login</a></p>
-            </form>
+            <div className="form-wrapper">
+
+                <form className="register-form" onSubmit={handleSubmit}>
+                    <h2>Register</h2>
+                    <input
+                        type="email"
+                        name="email"
+                        placeholder="Email"
+                        value={inputs.email}
+                        onChange={handleChange}
+                        required
+                    />
+                    <input
+                        type="password"
+                        name="password"
+                        placeholder="Password"
+                        value={inputs.password}
+                        onChange={handleChange}
+                        required
+                    />
+                    <button type="submit">Register</button>
+                    <p>Already have an account? <a href="/login">Login</a></p>
+                </form>
+            </div>
         </>
     );
 };

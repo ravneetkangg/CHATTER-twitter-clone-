@@ -8,6 +8,10 @@ import {
 } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
+import UserTweets from "./UserTweets";
+import Liked from "./Likes";
+import Saved from "./Saved";
+
 import "./Profile.css";
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
@@ -18,6 +22,7 @@ const Profile = () => {
   const [modalTitle, setModalTitle] = useState("");
   const [modalUsers, setModalUsers] = useState([]);
   const [displayCount, setDisplayCount] = useState(5);
+  const [activeTab, setActiveTab] = useState("tweets"); // default tab
 
   const userInfo = JSON.parse(sessionStorage.getItem("user"));
   const userId = userInfo?._id;
@@ -33,22 +38,24 @@ const Profile = () => {
 
   useEffect(() => {
     fetchUser();
+    const showImageDelay = sessionStorage.getItem("showImageDelayPopup");
+    if (showImageDelay === "true") {
+      // alert("Your profile picture may take a few moments to update.");
+      sessionStorage.removeItem("showImageDelayPopup");
+    }
   }, [fetchUser]);
-
 
   const openModal = (type) => {
     if (!user) return;
     setModalTitle(type === "followers" ? "Followers" : "Following");
 
     if (type === "followers") {
-      // For each follower, mark whether we (current user) follow them back
       const enrichedFollowers = user.followers.map((follower) => ({
         ...follower,
         isFollowing: user.following.some((f) => f._id === follower._id),
       }));
       setModalUsers(enrichedFollowers);
     } else {
-      // Default: All following are followed
       const enrichedFollowing = user.following.map((f) => ({
         ...f,
         isFollowing: true,
@@ -73,17 +80,11 @@ const Profile = () => {
 
   const handleFollowToggle = async (targetUserId, currentlyFollowing) => {
     try {
-      if (currentlyFollowing) {
-        await axios.put(`${API_BASE_URL}/api/users/unfollow/${targetUserId}`, {
-          followerId: userId,
-        });
-      } else {
-        await axios.put(`${API_BASE_URL}/api/users/follow/${targetUserId}`, {
-          followerId: userId,
-        });
-      }
+      const endpoint = currentlyFollowing ? "unfollow" : "follow";
+      await axios.put(`${API_BASE_URL}/api/users/${endpoint}/${targetUserId}`, {
+        followerId: userId,
+      });
 
-      // Update modalUsers follow state
       setModalUsers((prev) =>
         prev.map((u) =>
           u._id === targetUserId ? { ...u, isFollowing: !currentlyFollowing } : u
@@ -98,106 +99,139 @@ const Profile = () => {
 
   return (
     <div className="profile-page">
-      <div className="profile-wrapper">
-        <div className="profile-photo">
-          <img src={userInfo.photo} alt="Profile" />
-        </div>
+      <div className="profile-full-wrapper">
 
-        <div className="profile-details">
-          <h2>{user.email}</h2>
-          <p>
-            <FaCalendarAlt style={{ marginRight: "6px" }} />
-            Joined: {new Date(user.createdAt).toLocaleDateString()}
-          </p>
+        <div className="profile-wrapper">
+          <div className="profile-photo">
+            <img src={userInfo.photo} alt="Profile" />
+          </div>
 
-          {user.address && (
+          <div className="profile-details">
+            <h2>{user.email}</h2>
             <p>
-              <FaMapMarkerAlt style={{ marginRight: "6px" }} />
-              {user.address}
+              <FaCalendarAlt style={{ marginRight: "6px" }} />
+              Joined: {new Date(user.createdAt).toLocaleDateString()}
             </p>
-          )}
 
-          {user.dob && (
-            <p>
-              <FaBirthdayCake style={{ marginRight: "6px" }} />
-              DOB: {new Date(user.dob).toLocaleDateString("en-GB")}
-            </p>
-          )}
+            {user.address && (
+              <p>
+                <FaMapMarkerAlt style={{ marginRight: "6px" }} />
+                {user.address}
+              </p>
+            )}
 
-          <div className="follow-stats">
-            <div className="clickable">
-              <p>{user.tweets?.length || 0}</p>
-              <span>Tweets</span>
+            {user.dob && (
+              <p>
+                <FaBirthdayCake style={{ marginRight: "6px" }} />
+                DOB: {new Date(user.dob).toLocaleDateString("en-GB")}
+              </p>
+            )}
+
+            <div className="follow-stats">
+              <div className="clickable">
+                <p>{user.tweets?.length || 0}</p>
+                <span>Tweets</span>
+              </div>
+              <div onClick={() => openModal("followers")} className="clickable">
+                <p>{user.followers?.length || 0}</p>
+                <span>Followers</span>
+              </div>
+              <div onClick={() => openModal("following")} className="clickable">
+                <p>{user.following?.length || 0}</p>
+                <span>Following</span>
+              </div>
             </div>
-            <div onClick={() => openModal("followers")} className="clickable">
-              <p>{user.followers?.length || 0}</p>
-              <span>Followers</span>
-            </div>
-            <div onClick={() => openModal("following")} className="clickable">
-              <p>{user.following?.length || 0}</p>
-              <span>Following</span>
-            </div>
+          </div>
+
+          <div className="edit-btn-wrapper">
+            <button
+              className="edit-profile-btn"
+              onClick={() => (window.location.href = "/profile/edit")}
+            >
+              <FaEdit style={{ marginRight: "6px" }} />
+              Edit Profile
+            </button>
           </div>
         </div>
 
-        <div className="edit-btn-wrapper">
+        {/* === Tabs === */}
+        <div className="profile-tabs">
           <button
-            className="edit-profile-btn"
-            onClick={() => (window.location.href = "/profile/edit")}
+            className={activeTab === "tweets" ? "active-tab" : ""}
+            onClick={() => setActiveTab("tweets")}
           >
-            <FaEdit style={{ marginRight: "6px" }} />
-            Edit Profile
+            Tweets
+          </button>
+          <button
+            className={activeTab === "liked" ? "active-tab" : ""}
+            onClick={() => setActiveTab("liked")}
+          >
+            Liked
+          </button>
+          <button
+            className={activeTab === "saved" ? "active-tab" : ""}
+            onClick={() => setActiveTab("saved")}
+          >
+            Saved
           </button>
         </div>
-      </div>
 
-      {showModal && (
-        <div className="modal-backdrop">
-          <div className="modal-box">
-            <h3>{modalTitle}</h3>
-            <button className="close-btn" onClick={closeModal}>
-              ×
-            </button>
-
-            <div className="modal-user-list">
-              {modalUsers.slice(0, displayCount).map((u, idx) => (
-                <div key={idx} className="user-modal-card">
-                  <div className="user-info-row">
-                    <div className="user-left">
-                      <img
-                        src={`https://chatter-profile-pics.s3.ap-south-1.amazonaws.com/profile-pics/${u._id}.jpeg`}
-                        alt="User"
-                        className="modal-user-photo"
-                      />
-                      <Link
-                        to={`/user/${encodeURIComponent(u.email)}`}
-                        className="user-email"
-                      >
-                        {u.email}
-                      </Link>
-                    </div>
-
-                    <button
-                      className={u.isFollowing ? "unfollow-btn" : "follow-btn"}
-                      onClick={() =>
-                        handleFollowToggle(u._id, u.isFollowing)
-                      }
-                    >
-                      {u.isFollowing ? "Unfollow" : "Follow"}
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {displayCount < modalUsers.length && (
-              <button className="more-btn" onClick={showNextUsers}>
-                More
-              </button>
-            )}
-          </div>
+        {/* === Render Tab Content === */}
+        <div className="profile-tab-content">
+          {activeTab === "tweets" && <UserTweets userId={userId} />}
+          {activeTab === "liked" && <Liked userId={userId} />}
+          {activeTab === "saved" && <Saved userId={userId} />}
         </div>
-      )}
+
+        {/* === Followers/Following Modal === */}
+        {showModal && (
+          <div className="modal-backdrop">
+            <div className="modal-box">
+              <h3>{modalTitle}</h3>
+              <button className="close-btn" onClick={closeModal}>
+                ×
+              </button>
+
+              <div className="modal-user-list">
+                {modalUsers.slice(0, displayCount).map((u, idx) => (
+                  <div key={idx} className="user-modal-card">
+                    <div className="user-info-row">
+                      <div className="user-left">
+                        <img
+                          src={`https://chatter-profile-pics.s3.ap-south-1.amazonaws.com/profile-pics/${u._id}.jpeg`}
+                          alt="User"
+                          className="modal-user-photo"
+                        />
+                        <Link
+                          to={`/user/${encodeURIComponent(u.email)}`}
+                          className="user-email"
+                        >
+                          {u.email}
+                        </Link>
+                      </div>
+
+                      <button
+                        className={u.isFollowing ? "unfollow-btn" : "follow-btn"}
+                        onClick={() =>
+                          handleFollowToggle(u._id, u.isFollowing)
+                        }
+                      >
+                        {u.isFollowing ? "Unfollow" : "Follow"}
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {displayCount < modalUsers.length && (
+                <button className="more-btn" onClick={showNextUsers}>
+                  More
+                </button>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
