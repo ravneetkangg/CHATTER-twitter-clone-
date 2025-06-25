@@ -38,6 +38,11 @@ const Profile = () => {
 
   useEffect(() => {
     fetchUser();
+    const showImageDelay = sessionStorage.getItem("showImageDelayPopup");
+    if (showImageDelay === "true") {
+      // alert("Your profile picture may take a few moments to update.");
+      sessionStorage.removeItem("showImageDelayPopup");
+    }
   }, [fetchUser]);
 
   const openModal = (type) => {

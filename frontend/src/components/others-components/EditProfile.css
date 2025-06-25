@@ -110,3 +110,17 @@ input[type="date"].edit-input::-webkit-calendar-picker-indicator {
 .save-btn:hover {
     background-color: #0d8ddb;
 }
+
+.edit-profile-photo-section {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.edit-profile-photo {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 10px;
+    border: 4px solid #1da1f2;
+}
