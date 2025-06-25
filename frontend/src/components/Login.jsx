@@ -15,7 +15,7 @@ const Login = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
+
         try {
             const response = await axios.post(`${API_BASE_URL}/api/users/login`, {
                 email: inputs.email,
@@ -48,29 +48,34 @@ const Login = () => {
     }, []);
 
     return (
-        <form className="login-form" onSubmit={handleSubmit}>
-            <h2>Login</h2>
-            <input
-                type="email"
-                name="email"
-                placeholder="Email"
-                value={inputs.email}
-                onChange={handleChange}
-                required
-            />
-            <input
-                type="password"
-                name="password"
-                placeholder="Password"
-                value={inputs.password}
-                onChange={handleChange}
-                required
-            />
-            <button type="submit">Login</button>
-            <p>
-                Don't have an account? <a href="/register">Register</a>
-            </p>
-        </form>
+        <>
+            <div className="form-wrapper">
+
+                <form className="login-form" onSubmit={handleSubmit}>
+                    <h2>Login</h2>
+                    <input
+                        type="email"
+                        name="email"
+                        placeholder="Email"
+                        value={inputs.email}
+                        onChange={handleChange}
+                        required
+                    />
+                    <input
+                        type="password"
+                        name="password"
+                        placeholder="Password"
+                        value={inputs.password}
+                        onChange={handleChange}
+                        required
+                    />
+                    <button type="submit">Login</button>
+                    <p>
+                        Don't have an account? <a href="/register">Register</a>
+                    </p>
+                </form>
+            </div>
+        </>
     );
 };
 
