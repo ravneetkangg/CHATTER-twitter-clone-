@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "./Home.css";
 import AllTweetsArea from "./AllTweetsArea";
-import { FaPen, FaRegCalendarAlt } from "react-icons/fa";
+import { FaPen, FaRegCalendarAlt, FaMapMarkerAlt } from "react-icons/fa";
 import axios from "axios";
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
@@ -13,14 +13,14 @@ const Home = () => {
 
   const [tweetContent, setTweetContent] = useState("");
   const [userData, setUserData] = useState(null);
-  const [selectedFile, setSelectedFile] = useState(null);
 
+  // Fetch full user profile using _id from sessionStorage
   useEffect(() => {
     const userDataString = sessionStorage.getItem("user");
     if (userDataString) {
       try {
         const parsedUser = JSON.parse(userDataString);
-        setUserData(parsedUser);
+        fetchUserDetails(parsedUser._id);
       } catch (error) {
         console.error("Error parsing user data:", error);
         navigate("/login");
@@ -29,6 +29,16 @@ const Home = () => {
       navigate("/login");
     }
   }, [navigate]);
+
+  const fetchUserDetails = async (userId) => {
+    try {
+      const res = await axios.get(`${API_BASE_URL}/api/users/${userId}`);
+      setUserData(res.data);
+    } catch (error) {
+      console.error("Error fetching user profile:", error);
+      navigate("/login");
+    }
+  };
 
   const handleTweetChange = (e) => {
     setTweetContent(e.target.value);
@@ -56,45 +66,11 @@ const Home = () => {
     }
   };
 
-  const handleFileChange = (e) => {
-    setSelectedFile(e.target.files[0]);
-  };
-
-  const handleUploadProfilePic = async () => {
-    if (!selectedFile || !userData) return;
-
-    const formData = new FormData();
-    formData.append("userId", userData._id);
-    formData.append("photo", selectedFile);
-
-    try {
-      const response = await axios.post(`${API_BASE_URL}/api/users/upload-photo`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-
-      console.log("Profile picture uploaded successfully:", response.data);
-
-      const updatedUser = {
-        ...userData,
-        photo: response.data.photoUrl, // assuming backend sends the URL
-      };
-      setUserData(updatedUser);
-      sessionStorage.setItem("user", JSON.stringify(updatedUser));
-      setSelectedFile(null);
-    } catch (error) {
-      console.error("Error uploading profile picture:", error);
-      alert("Failed to upload profile picture. Please try again.");
-    }
-  };
-
-
   const formattedJoinDate = userData?.createdAt
     ? new Date(userData.createdAt).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-    })
+        year: "numeric",
+        month: "long",
+      })
     : null;
 
   return (
@@ -120,49 +96,56 @@ const Home = () => {
       <div className="info-container">
         {userData && (
           <div className="user-info">
-            {userData.photo ? (
-              <img src={userData.photo} alt="User avatar" className="user-profile-pic" />
-            ) : (
-              <div className="default-avatar">U</div>
-            )}
-
-            <div className="file-input-container">
-              <label htmlFor="profilePicInput" className="file-input-label">
-                Choose File
-              </label>
-              <input
-                type="file"
-                id="profilePicInput"
-                onChange={handleFileChange}
-                style={{ display: "none" }}
-              />
-              {selectedFile && <span className="file-name">{selectedFile.name}</span>}
-              <button className="upload-btn" onClick={handleUploadProfilePic}>
-                Upload
-              </button>
+            {/* Profile Picture */}
+            <div onClick={() => navigate("/profile")} style={{ cursor: "pointer" }}>
+              {userData.photo ? (
+                <img src={userData.photo} alt="User avatar" className="user-profile-pic" />
+              ) : (
+                <div className="default-avatar">U</div>
+              )}
             </div>
 
-            <p>{userData.email}</p>
+            {/* Email */}
+            <p
+              style={{ cursor: "pointer", fontWeight: "bold" }}
+              onClick={() => navigate("/profile")}
+            >
+              {userData.email}
+            </p>
+
+            {/* Followers / Following */}
+            <div className="user-stats">
+              <div className="stat" onClick={() => navigate("/profile")} style={{ cursor: "pointer" }}>
+                <strong>{userData.followers?.length || 0}</strong>
+                <span>Followers</span>
+              </div>
+              <div className="stat" onClick={() => navigate("/profile")} style={{ cursor: "pointer" }}>
+                <strong>{userData.following?.length || 0}</strong>
+                <span>Following</span>
+              </div>
+            </div>
+
+            {/* Join Date */}
             {formattedJoinDate && (
               <p className="user-joined">
-                <FaRegCalendarAlt style={{ marginRight: "6px" }} />
+                <FaRegCalendarAlt />
                 Joined: {formattedJoinDate}
               </p>
             )}
 
-            <p>
-              <FaPen style={{ marginRight: "6px" }} />
-              Total Tweets: {userData.tweets.length}
-            </p>
+            {/* Address */}
+            {userData.address && (
+              <p className="user-joined">
+                <FaMapMarkerAlt />
+                {userData.address}
+              </p>
+            )}
 
-            <div className="user-gallery">
-              <Link to="/liked">
-                <div className="liked-tweets">Liked</div>
-              </Link>
-              <Link to="/saved">
-                <div className="saved-tweets">Saved</div>
-              </Link>
-            </div>
+            {/* Tweet Count */}
+            <p>
+              <FaPen />
+              Total Tweets: {userData.tweets?.length || 0}
+            </p>
           </div>
         )}
       </div>
