@@ -8,7 +8,7 @@ import {
 } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
-import AllTweetsArea from "../AllTweetsArea";
+import UserTweets from "./UserTweets";
 import Liked from "./Likes";
 import Saved from "./Saved";
 
@@ -173,7 +173,7 @@ const Profile = () => {
 
         {/* === Render Tab Content === */}
         <div className="profile-tab-content">
-          {activeTab === "tweets" && <AllTweetsArea userId={userId} />}
+          {activeTab === "tweets" && <UserTweets userId={userId} />}
           {activeTab === "liked" && <Liked userId={userId} />}
           {activeTab === "saved" && <Saved userId={userId} />}
         </div>

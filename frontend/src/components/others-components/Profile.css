@@ -221,9 +221,14 @@
     top: 12px;
     right: 16px;
     background: none;
+    color: #6a6a6a;
     border: none;
     font-size: 1.6rem;
     cursor: pointer;
+}
+
+.close-btn:hover {
+    color: #000000;
 }
 
 
@@ -232,7 +237,7 @@
 .modal-user-list {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 10px;
 }
 
 .user-modal-card {
@@ -253,9 +258,10 @@
 }
 
 .modal-user-photo {
-    width: 42px;
-    height: 42px;
+    width: 45px;
+    height: 45px;
     border-radius: 50%;
+    border: solid rgb(156, 156, 156);
     object-fit: cover;
 }
 
@@ -271,8 +277,8 @@
     color: white;
     border: none;
     padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 0.85rem;
+    border-radius: 10px;
+    font-size: 1rem;
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
@@ -301,7 +307,7 @@
     color: white;
     border: none;
     padding: 10px 20px;
-    border-radius: 999px;
+    border-radius: 10px;
     font-size: 0.9rem;
     cursor: pointer;
 }
