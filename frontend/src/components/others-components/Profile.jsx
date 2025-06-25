@@ -98,106 +98,117 @@ const Profile = () => {
 
   return (
     <div className="profile-page">
-      <div className="profile-wrapper">
-        <div className="profile-photo">
-          <img src={userInfo.photo} alt="Profile" />
-        </div>
+      <div className="profile-full-wrapper">
 
-        <div className="profile-details">
-          <h2>{user.email}</h2>
-          <p>
-            <FaCalendarAlt style={{ marginRight: "6px" }} />
-            Joined: {new Date(user.createdAt).toLocaleDateString()}
-          </p>
-
-          {user.address && (
-            <p>
-              <FaMapMarkerAlt style={{ marginRight: "6px" }} />
-              {user.address}
-            </p>
-          )}
-
-          {user.dob && (
-            <p>
-              <FaBirthdayCake style={{ marginRight: "6px" }} />
-              DOB: {new Date(user.dob).toLocaleDateString("en-GB")}
-            </p>
-          )}
-
-          <div className="follow-stats">
-            <div className="clickable">
-              <p>{user.tweets?.length || 0}</p>
-              <span>Tweets</span>
-            </div>
-            <div onClick={() => openModal("followers")} className="clickable">
-              <p>{user.followers?.length || 0}</p>
-              <span>Followers</span>
-            </div>
-            <div onClick={() => openModal("following")} className="clickable">
-              <p>{user.following?.length || 0}</p>
-              <span>Following</span>
-            </div>
+        <div className="profile-wrapper">
+          <div className="profile-photo">
+            <img src={userInfo.photo} alt="Profile" />
           </div>
-        </div>
 
-        <div className="edit-btn-wrapper">
-          <button
-            className="edit-profile-btn"
-            onClick={() => (window.location.href = "/profile/edit")}
-          >
-            <FaEdit style={{ marginRight: "6px" }} />
-            Edit Profile
-          </button>
-        </div>
-      </div>
+          <div className="profile-details">
+            <h2>{user.email}</h2>
+            <p>
+              <FaCalendarAlt style={{ marginRight: "6px" }} />
+              Joined: {new Date(user.createdAt).toLocaleDateString()}
+            </p>
 
-      {showModal && (
-        <div className="modal-backdrop">
-          <div className="modal-box">
-            <h3>{modalTitle}</h3>
-            <button className="close-btn" onClick={closeModal}>
-              ×
-            </button>
-
-            <div className="modal-user-list">
-              {modalUsers.slice(0, displayCount).map((u, idx) => (
-                <div key={idx} className="user-modal-card">
-                  <div className="user-info-row">
-                    <div className="user-left">
-                      <img
-                        src={`https://chatter-profile-pics.s3.ap-south-1.amazonaws.com/profile-pics/${u._id}.jpeg`}
-                        alt="User"
-                        className="modal-user-photo"
-                      />
-                      <Link
-                        to={`/user/${encodeURIComponent(u.email)}`}
-                        className="user-email"
-                      >
-                        {u.email}
-                      </Link>
-                    </div>
-
-                    <button
-                      className={u.isFollowing ? "unfollow-btn" : "follow-btn"}
-                      onClick={() =>
-                        handleFollowToggle(u._id, u.isFollowing)
-                      }
-                    >
-                      {u.isFollowing ? "Unfollow" : "Follow"}
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {displayCount < modalUsers.length && (
-              <button className="more-btn" onClick={showNextUsers}>
-                More
-              </button>
+            {user.address && (
+              <p>
+                <FaMapMarkerAlt style={{ marginRight: "6px" }} />
+                {user.address}
+              </p>
             )}
+
+            {user.dob && (
+              <p>
+                <FaBirthdayCake style={{ marginRight: "6px" }} />
+                DOB: {new Date(user.dob).toLocaleDateString("en-GB")}
+              </p>
+            )}
+
+            <div className="follow-stats">
+              <div className="clickable">
+                <p>{user.tweets?.length || 0}</p>
+                <span>Tweets</span>
+              </div>
+              <div onClick={() => openModal("followers")} className="clickable">
+                <p>{user.followers?.length || 0}</p>
+                <span>Followers</span>
+              </div>
+              <div onClick={() => openModal("following")} className="clickable">
+                <p>{user.following?.length || 0}</p>
+                <span>Following</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="edit-btn-wrapper">
+            <button
+              className="edit-profile-btn"
+              onClick={() => (window.location.href = "/profile/edit")}
+            >
+              <FaEdit style={{ marginRight: "6px" }} />
+              Edit Profile
+            </button>
           </div>
         </div>
-      )}
+
+        <div className="profile-tabs">
+          <button className="active-tab">Tweets</button>
+          <button>Liked</button>
+          <button>Saved</button>
+        </div>
+        
+
+
+        {showModal && (
+          <div className="modal-backdrop">
+            <div className="modal-box">
+              <h3>{modalTitle}</h3>
+              <button className="close-btn" onClick={closeModal}>
+                ×
+              </button>
+
+              <div className="modal-user-list">
+                {modalUsers.slice(0, displayCount).map((u, idx) => (
+                  <div key={idx} className="user-modal-card">
+                    <div className="user-info-row">
+                      <div className="user-left">
+                        <img
+                          src={`https://chatter-profile-pics.s3.ap-south-1.amazonaws.com/profile-pics/${u._id}.jpeg`}
+                          alt="User"
+                          className="modal-user-photo"
+                        />
+                        <Link
+                          to={`/user/${encodeURIComponent(u.email)}`}
+                          className="user-email"
+                        >
+                          {u.email}
+                        </Link>
+                      </div>
+
+                      <button
+                        className={u.isFollowing ? "unfollow-btn" : "follow-btn"}
+                        onClick={() =>
+                          handleFollowToggle(u._id, u.isFollowing)
+                        }
+                      >
+                        {u.isFollowing ? "Unfollow" : "Follow"}
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {displayCount < modalUsers.length && (
+                <button className="more-btn" onClick={showNextUsers}>
+                  More
+                </button>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

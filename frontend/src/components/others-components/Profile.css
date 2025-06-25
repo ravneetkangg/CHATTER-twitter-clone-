@@ -1,102 +1,151 @@
-/* === Page Layout === */
+/* === Container for whole profile page === */
 
 .profile-page {
-    padding: 100px 0 60px;
-    /* 👈 add top padding to push below navbar */
-    width: 100vw;
-    background-color: #f5f8fa;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    /* 👈 align to top instead of center */
+    padding-top: 100px;
+    /* for fixed navbar */
+    padding-bottom: 60px;
+    background-color: #f4f4f4;
     min-height: 100vh;
+    width: 100vw;
+    /* Make sure it spans full viewport width */
     box-sizing: border-box;
+    /* Ensure padding doesn’t overflow width */
 }
 
+
+/* === Inner wrapper to center profile === */
+
+.profile-full-wrapper {
+    width: 100%;
+    max-width: none;
+    padding: 0;
+    margin: 0;
+}
+
+
+/* === Profile Header Section === */
+
 .profile-wrapper {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
+    width: 100%;
+    padding: 30px;
     background-color: white;
-    padding: 30px 40px;
-    border-radius: 16px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
-    width: 90%;
-    max-width: 1100px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    display: flex;
     gap: 40px;
     flex-wrap: wrap;
 }
 
-
-/* === Profile Photo === */
-
 .profile-photo img {
-    width: 250px;
-    height: 250px;
+    width: 130px;
+    height: 130px;
+    object-fit: cover;
     border-radius: 50%;
     border: 3px solid #1da1f2;
-    object-fit: cover;
-    box-shadow: 0 4px 12px rgba(29, 161, 242, 0.3);
 }
-
-
-/* === Profile Details === */
 
 .profile-details {
     flex: 1;
-    min-width: 260px;
+    min-width: 250px;
 }
 
 .profile-details h2 {
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: #222;
     margin-bottom: 10px;
+    font-size: 1.5rem;
+    font-weight: bold;
 }
 
 .profile-details p {
-    font-size: 1rem;
-    color: #444;
-    margin: 4px 0;
+    margin: 6px 0;
+    font-size: 0.95rem;
+    color: #555;
+    display: flex;
+    align-items: center;
 }
 
 
-/* === Follower Stats === */
+/* === Follow Stats === */
 
 .follow-stats {
     display: flex;
-    gap: 30px;
-    margin-top: 20px;
+    gap: 40px;
+    margin-top: 16px;
 }
 
-.follow-stats div {
+.follow-stats .clickable {
     text-align: center;
     cursor: pointer;
-    padding: 10px 20px;
-    border-radius: 8px;
-    background-color: #f0f8ff;
-    transition: background 0.2s ease;
 }
 
-.follow-stats div:hover {
-    background-color: #e2f3ff;
-}
-
-.follow-stats p {
+.follow-stats .clickable p {
     font-size: 1.2rem;
     font-weight: bold;
-    color: #1da1f2;
-    margin: 0;
+    margin-bottom: 2px;
 }
 
-.follow-stats span {
-    display: block;
-    font-size: 0.9rem;
+.follow-stats .clickable span {
+    font-size: 0.85rem;
+    color: #666;
+}
+
+
+/* === Edit Button === */
+
+.edit-btn-wrapper {
+    margin-top: auto;
+}
+
+.edit-profile-btn {
+    background-color: #1da1f2;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 0.95rem;
+    border-radius: 24px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.edit-profile-btn:hover {
+    background-color: #0b85d1;
+}
+
+
+/* === Profile Tabs === */
+
+.profile-tabs {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 24px;
+    background-color: white;
+    padding: 16px;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+.profile-tabs button {
+    background: none;
+    border: none;
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 10px 20px;
+    cursor: pointer;
     color: #555;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s ease;
+}
+
+.profile-tabs button:hover {
+    color: #1da1f2;
+}
+
+.profile-tabs .active-tab {
+    color: #1da1f2;
+    border-bottom: 2px solid #1da1f2;
 }
 
 
-/* === Modal === */
+/* === Modal Styles === */
 
 .modal-backdrop {
     position: fixed;
@@ -104,168 +153,129 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.4);
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 2000;
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000;
 }
 
 .modal-box {
-    background: white;
+    background-color: white;
     width: 90%;
-    max-width: 400px;
-    max-height: 80vh;
+    max-width: 500px;
     border-radius: 10px;
-    padding: 1.5rem 1rem 1rem;
+    padding: 24px;
     position: relative;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
-    display: flex;
-    flex-direction: column;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.modal-box h3 {
+    margin: 0 0 16px;
+    font-size: 1.4rem;
 }
 
 .close-btn {
     position: absolute;
-    top: 10px;
-    right: 15px;
-    font-size: 1.5rem;
-    background: transparent;
+    top: 12px;
+    right: 16px;
+    background: none;
     border: none;
+    font-size: 1.6rem;
     cursor: pointer;
 }
 
+
+/* === Modal User List === */
+
 .modal-user-list {
-    overflow-y: auto;
-    flex: 1;
-    margin-top: 1rem;
-    padding-right: 6px;
-}
-
-.modal-user-list::-webkit-scrollbar {
-    width: 6px;
-}
-
-.modal-user-list::-webkit-scrollbar-thumb {
-    background-color: #bbb;
-    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
 }
 
 .user-modal-card {
-    width: 100%;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
 }
 
 .user-info-row {
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    padding: 10px 0;
-    border-bottom: 1px solid #eee;
+    align-items: center;
 }
 
 .user-left {
     display: flex;
     align-items: center;
     gap: 12px;
-    flex: 1;
 }
 
 .modal-user-photo {
-    width: 48px;
-    height: 48px;
+    width: 42px;
+    height: 42px;
     border-radius: 50%;
     object-fit: cover;
-    border: 2px solid #ccc;
 }
 
 .user-email {
-    max-width: 180px;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    font-size: 0.95rem;
-    color: #333;
-}
-
-.unfollow-btn {
-    background-color: #e02424;
-    color: white;
-    border: none;
-    padding: 6px 12px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 0.85rem;
-    transition: background-color 0.3s ease;
-}
-
-.unfollow-btn:hover {
-    background-color: #c81e1e;
-}
-
-.more-btn {
-    margin-top: 1rem;
-    align-self: center;
-    background-color: black;
-    color: white;
-    padding: 8px 16px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    transition: background-color 0.3s ease;
-}
-
-.more-btn:hover {
-    background-color: #333;
-}
-
-.edit-btn-wrapper {
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: 10px;
-}
-
-.edit-profile-btn {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 16px;
-    background-color: #1da1f2;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.edit-profile-btn:hover {
-    background-color: #0d8de0;
+    font-weight: 500;
+    color: #1d1d1d;
+    text-decoration: none;
 }
 
 .follow-btn,
 .unfollow-btn {
-    padding: 10px 20px;
-    font-size: 0.95rem;
+    background-color: #1da1f2;
+    color: white;
     border: none;
-    border-radius: 8px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
 
-.follow-btn {
-    background-color: #1da1f2;
-    color: white;
+.unfollow-btn {
+    background-color: #ef4444;
 }
 
 .follow-btn:hover {
-    background-color: #0d8de0;
-}
-
-.unfollow-btn {
-    background-color: #e02424;
-    color: white;
+    background-color: #0b85d1;
 }
 
 .unfollow-btn:hover {
-    background-color: #c81e1e;
+    background-color: #dc2626;
+}
+
+
+/* === More Button === */
+
+.more-btn {
+    margin-top: 16px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #1da1f2;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 999px;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.more-btn:hover {
+    background-color: #0b85d1;
+}
+
+
+/* === Loader === */
+
+.loading {
+    text-align: center;
+    padding-top: 150px;
+    font-size: 1.2rem;
+    color: #555;
 }
