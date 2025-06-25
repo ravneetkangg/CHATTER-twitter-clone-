@@ -8,6 +8,10 @@ import {
 } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
+import AllTweetsArea from "../AllTweetsArea";
+import Liked from "./Likes";
+import Saved from "./Saved";
+
 import "./Profile.css";
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
@@ -18,6 +22,7 @@ const Profile = () => {
   const [modalTitle, setModalTitle] = useState("");
   const [modalUsers, setModalUsers] = useState([]);
   const [displayCount, setDisplayCount] = useState(5);
+  const [activeTab, setActiveTab] = useState("tweets"); // default tab
 
   const userInfo = JSON.parse(sessionStorage.getItem("user"));
   const userId = userInfo?._id;
@@ -35,20 +40,17 @@ const Profile = () => {
     fetchUser();
   }, [fetchUser]);
 
-
   const openModal = (type) => {
     if (!user) return;
     setModalTitle(type === "followers" ? "Followers" : "Following");
 
     if (type === "followers") {
-      // For each follower, mark whether we (current user) follow them back
       const enrichedFollowers = user.followers.map((follower) => ({
         ...follower,
         isFollowing: user.following.some((f) => f._id === follower._id),
       }));
       setModalUsers(enrichedFollowers);
     } else {
-      // Default: All following are followed
       const enrichedFollowing = user.following.map((f) => ({
         ...f,
         isFollowing: true,
@@ -73,17 +75,11 @@ const Profile = () => {
 
   const handleFollowToggle = async (targetUserId, currentlyFollowing) => {
     try {
-      if (currentlyFollowing) {
-        await axios.put(`${API_BASE_URL}/api/users/unfollow/${targetUserId}`, {
-          followerId: userId,
-        });
-      } else {
-        await axios.put(`${API_BASE_URL}/api/users/follow/${targetUserId}`, {
-          followerId: userId,
-        });
-      }
+      const endpoint = currentlyFollowing ? "unfollow" : "follow";
+      await axios.put(`${API_BASE_URL}/api/users/${endpoint}/${targetUserId}`, {
+        followerId: userId,
+      });
 
-      // Update modalUsers follow state
       setModalUsers((prev) =>
         prev.map((u) =>
           u._id === targetUserId ? { ...u, isFollowing: !currentlyFollowing } : u
@@ -153,14 +149,36 @@ const Profile = () => {
           </div>
         </div>
 
+        {/* === Tabs === */}
         <div className="profile-tabs">
-          <button className="active-tab">Tweets</button>
-          <button>Liked</button>
-          <button>Saved</button>
+          <button
+            className={activeTab === "tweets" ? "active-tab" : ""}
+            onClick={() => setActiveTab("tweets")}
+          >
+            Tweets
+          </button>
+          <button
+            className={activeTab === "liked" ? "active-tab" : ""}
+            onClick={() => setActiveTab("liked")}
+          >
+            Liked
+          </button>
+          <button
+            className={activeTab === "saved" ? "active-tab" : ""}
+            onClick={() => setActiveTab("saved")}
+          >
+            Saved
+          </button>
         </div>
-        
 
+        {/* === Render Tab Content === */}
+        <div className="profile-tab-content">
+          {activeTab === "tweets" && <AllTweetsArea userId={userId} />}
+          {activeTab === "liked" && <Liked userId={userId} />}
+          {activeTab === "saved" && <Saved userId={userId} />}
+        </div>
 
+        {/* === Followers/Following Modal === */}
         {showModal && (
           <div className="modal-backdrop">
             <div className="modal-box">

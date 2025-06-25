@@ -6,7 +6,7 @@
     padding-bottom: 60px;
     background-color: #f4f4f4;
     min-height: 100vh;
-    width: 100vw;
+    width: 77vw;
     /* Make sure it spans full viewport width */
     box-sizing: border-box;
     /* Ensure padding doesn’t overflow width */
@@ -25,42 +25,59 @@
 
 /* === Profile Header Section === */
 
+
+/* === Profile Wrapper === */
+
 .profile-wrapper {
     width: 100%;
-    padding: 30px;
-    background-color: white;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    padding: 30px 40px;
+    background-color: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
     display: flex;
-    gap: 40px;
+    align-items: flex-start;
+    align-items: center;
+    /* <-- vertical centering */
+    gap: 30px;
+    box-sizing: border-box;
     flex-wrap: wrap;
+    position: relative;
 }
 
+
+/* === Profile Photo === */
+
 .profile-photo img {
-    width: 130px;
-    height: 130px;
+    width: 250px;
+    height: 250px;
     object-fit: cover;
     border-radius: 50%;
-    border: 3px solid #1da1f2;
+    border: 4px solid #1da1f2;
+    box-shadow: 0 4px 12px rgba(29, 161, 242, 0.3);
 }
+
+
+/* === Profile Details === */
 
 .profile-details {
     flex: 1;
-    min-width: 250px;
+    min-width: 280px;
 }
 
 .profile-details h2 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #222;
     margin-bottom: 10px;
-    font-size: 1.5rem;
-    font-weight: bold;
 }
 
 .profile-details p {
     margin: 6px 0;
-    font-size: 0.95rem;
+    font-size: 1rem;
     color: #555;
     display: flex;
     align-items: center;
+    gap: 6px;
 }
 
 
@@ -68,19 +85,29 @@
 
 .follow-stats {
     display: flex;
-    gap: 40px;
-    margin-top: 16px;
+    gap: 30px;
+    margin-top: 20px;
 }
 
 .follow-stats .clickable {
     text-align: center;
     cursor: pointer;
+    background-color: #f0f8ff;
+    padding: 10px 20px;
+    border-radius: 10px;
+    transition: background-color 0.2s ease;
+}
+
+.follow-stats .clickable:hover {
+    background-color: #e0f2ff;
 }
 
 .follow-stats .clickable p {
+    justify-content: center;
     font-size: 1.2rem;
     font-weight: bold;
-    margin-bottom: 2px;
+    color: #1da1f2;
+    margin: 0;
 }
 
 .follow-stats .clickable span {
@@ -89,21 +116,31 @@
 }
 
 
-/* === Edit Button === */
+/* === Edit Button Wrapper === */
 
 .edit-btn-wrapper {
-    margin-top: auto;
+    height: 100%;
+    position: absolute;
+    display: flex;
+    align-items: center;
+    right: 40px;
 }
 
+
+/* === Edit Button === */
+
 .edit-profile-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
     background-color: #1da1f2;
     color: white;
     border: none;
-    padding: 10px 20px;
-    font-size: 0.95rem;
-    border-radius: 24px;
+    border-radius: 8px;
+    font-size: 1rem;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: background-color 0.3s ease;
 }
 
 .edit-profile-btn:hover {
