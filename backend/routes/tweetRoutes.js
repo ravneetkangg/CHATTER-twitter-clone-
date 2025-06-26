@@ -71,7 +71,6 @@ router.delete('/delete/:tweetId', async(req, res) => {
 
 
 
-// PUT /like/:tweetId
 router.put('/like/:tweetId', async(req, res) => {
     try {
         const { userId } = req.body; // expecting userId in body
@@ -79,8 +78,11 @@ router.put('/like/:tweetId', async(req, res) => {
 
         if (!tweet) return res.status(404).json({ message: "Tweet not found" });
 
-        if (!tweet.likes.includes(userId)) {
-            tweet.likes.push(userId);
+        // Check if already liked
+        const alreadyLiked = tweet.likes.some(like => like.user.toString() === userId);
+
+        if (!alreadyLiked) {
+            tweet.likes.push({ user: userId, likedAt: new Date() });
             await tweet.save();
         }
 
@@ -92,7 +94,6 @@ router.put('/like/:tweetId', async(req, res) => {
 });
 
 
-// PUT /unlike/:tweetId
 router.put('/unlike/:tweetId', async(req, res) => {
     try {
         const { userId } = req.body;
@@ -100,7 +101,8 @@ router.put('/unlike/:tweetId', async(req, res) => {
 
         if (!tweet) return res.status(404).json({ message: "Tweet not found" });
 
-        tweet.likes = tweet.likes.filter(id => id.toString() !== userId);
+        // Remove like by matching `user` field
+        tweet.likes = tweet.likes.filter(like => like.user.toString() !== userId);
         await tweet.save();
 
         res.status(200).json({ message: "Tweet unliked successfully" });
@@ -110,20 +112,102 @@ router.put('/unlike/:tweetId', async(req, res) => {
     }
 });
 
-// GET all tweets liked by a user
+
+
+// GET all tweets liked by a user in reverse order of like time
 router.get('/liked/:userId', async(req, res) => {
     try {
         const { userId } = req.params;
+        const tweets = await Tweet.find({ 'likes.user': userId })
+            .populate('email', 'email');
 
-        const likedTweets = await Tweet.find({ likes: userId })
-            .populate('email', 'email'); // to get user email who posted
+        const tweetsWithLikedAt = tweets
+            .map(tweet => {
+                const likeEntry = tweet.likes.find(like => like.user.toString() === userId);
+                return {
+                    tweet,
+                    likedAt: likeEntry ? new Date(likeEntry.likedAt) : null
+                };
+            })
+            .filter(t => t.likedAt !== null) // filter out any not found (just in case)
+            .sort((a, b) => b.likedAt - a.likedAt);
 
-        res.status(200).json(likedTweets);
+        const sortedTweets = tweetsWithLikedAt.map(t => t.tweet);
+
+        res.status(200).json(sortedTweets);
     } catch (error) {
         console.error("Error fetching liked tweets:", error);
         res.status(500).json({ message: "Failed to fetch liked tweets" });
     }
 });
+
+
+router.put('/save/:tweetId', async(req, res) => {
+    try {
+        const { userId } = req.body;
+        const tweet = await Tweet.findById(req.params.tweetId);
+
+        if (!tweet) return res.status(404).json({ message: "Tweet not found" });
+
+        const alreadySaved = tweet.saved.some(save => save.user.toString() === userId);
+
+        if (!alreadySaved) {
+            tweet.saved.push({ user: userId, savedAt: new Date() });
+            await tweet.save();
+        }
+
+        res.status(200).json({ message: "Tweet saved successfully" });
+    } catch (error) {
+        console.error("Error saving tweet:", error);
+        res.status(500).json({ message: "Error saving tweet" });
+    }
+});
+
+
+router.put('/unsave/:tweetId', async(req, res) => {
+    try {
+        const { userId } = req.body;
+        const tweet = await Tweet.findById(req.params.tweetId);
+
+        if (!tweet) return res.status(404).json({ message: "Tweet not found" });
+
+        tweet.saved = tweet.saved.filter(save => save.user.toString() !== userId);
+        await tweet.save();
+
+        res.status(200).json({ message: "Tweet unsaved successfully" });
+    } catch (error) {
+        console.error("Error unsaving tweet:", error);
+        res.status(500).json({ message: "Error unsaving tweet" });
+    }
+});
+
+
+router.get('/saved/:userId', async(req, res) => {
+    try {
+        const { userId } = req.params;
+        const tweets = await Tweet.find({ 'saved.user': userId })
+            .populate('email', 'email');
+
+        const tweetsWithSavedAt = tweets
+            .map(tweet => {
+                const saveEntry = tweet.saved.find(save => save.user.toString() === userId);
+                return {
+                    tweet,
+                    savedAt: saveEntry ? new Date(saveEntry.savedAt) : null
+                };
+            })
+            .filter(t => t.savedAt !== null)
+            .sort((a, b) => b.savedAt - a.savedAt);
+
+        const sortedTweets = tweetsWithSavedAt.map(t => t.tweet);
+
+        res.status(200).json(sortedTweets);
+    } catch (error) {
+        console.error("Error fetching saved tweets:", error);
+        res.status(500).json({ message: "Failed to fetch saved tweets" });
+    }
+});
+
 
 
 // GET all tweets posted by a user

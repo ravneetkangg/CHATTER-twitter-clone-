@@ -4,8 +4,14 @@ const tweetSchema = new mongoose.Schema({
     tweet: { type: String, required: true },
     email: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
 
-    likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
-
+    likes: [{
+        user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+        likedAt: { type: Date, default: Date.now }
+    }],
+    saved: [{
+        user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+        savedAt: { type: Date, default: Date.now }
+    }],
     comments: [{
         comment: { type: String, required: true },
         user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },

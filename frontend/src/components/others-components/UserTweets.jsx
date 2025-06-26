@@ -35,6 +35,7 @@ const UserTweets = ({ userId }) => {
             tweetedAt={tweet.createdAt}
             tweet_id={tweet._id}
             likes={tweet.likes || []}
+            saved={tweet.saved || []}
             comments={tweet.comments || []}
           />
         ))
