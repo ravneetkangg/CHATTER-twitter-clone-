@@ -73,16 +73,28 @@ router.delete('/delete/:tweetId', async(req, res) => {
 
 router.put('/like/:tweetId', async(req, res) => {
     try {
-        const { userId } = req.body; // expecting userId in body
+        const { userId } = req.body;
         const tweet = await Tweet.findById(req.params.tweetId);
 
         if (!tweet) return res.status(404).json({ message: "Tweet not found" });
 
-        // Check if already liked
-        const alreadyLiked = tweet.likes.some(like => like.user.toString() === userId);
+        // Safely handle likes that may be plain ObjectIds or full objects
+        const alreadyLiked = tweet.likes.some(like => {
+            if (like && typeof like === 'object') {
+                if (like.user) {
+                    return like.user.toString() === userId;
+                }
+                // If `like` itself is an ObjectId (old format)
+                return like.toString() === userId;
+            }
+            return false;
+        });
 
         if (!alreadyLiked) {
-            tweet.likes.push({ user: userId, likedAt: new Date() });
+            tweet.likes.push({
+                user: mongoose.Types.ObjectId(userId),
+                likedAt: new Date()
+            });
             await tweet.save();
         }
 
