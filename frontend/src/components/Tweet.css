@@ -162,3 +162,141 @@
 .delete-icon:hover {
     transform: scale(1.1);
 }
+
+.comment-modal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 90%;
+    max-width: 480px;
+    max-height: 75vh;
+    transform: translate(-50%, -50%);
+    background: #ffffff;
+    padding: 16px 20px 12px;
+    overflow-y: auto;
+    border-radius: 12px;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+    /* 💡 stronger but smooth shadow */
+}
+
+.comment-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.55);
+}
+
+.modal-close-button {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    font-size: 18px;
+    color: #333;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.modal-close-button:hover {
+    color: #000;
+}
+
+.modal-tweet {
+    background-color: #f5f8fa;
+    border-left: 3px solid #1da1f2;
+    border-radius: 10px;
+    padding: 14px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+.modal-tweet-header,
+.comment-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+}
+
+.modal-user-avatar,
+.comment-user-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.modal-username,
+.comment-username {
+    font-weight: 600;
+    font-size: 14px;
+    color: #111;
+}
+
+.modal-time,
+.comment-time {
+    font-size: 11px;
+    color: #777;
+}
+
+.modal-tweet-content {
+    margin-top: 6px;
+    font-size: 14px;
+    color: #333;
+    line-height: 1.4;
+}
+
+.comment-thread {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-left: 30px;
+    border-left: 2px solid #e1e8ed;
+    padding-left: 12px;
+}
+
+.single-comment {
+    padding: 6px 0;
+    border-bottom: 1px solid #f2f2f2;
+    font-size: 13.5px;
+    color: #222;
+}
+
+.comment-input-container {
+    display: flex;
+    flex-direction: column;
+    margin-top: 12px;
+    gap: 6px;
+}
+
+.comment-textarea {
+    resize: vertical;
+    min-height: 60px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 13px;
+    width: 100%;
+    font-family: inherit;
+    outline-color: #1da1f2;
+}
+
+.post-comment-btn {
+    align-self: flex-end;
+    padding: 5px 14px;
+    background-color: #1da1f2;
+    color: white;
+    font-size: 13px;
+    font-weight: 500;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.post-comment-btn:hover {
+    background-color: #0d8ddb;
+}
+
+.post-comment-btn:disabled {
+    background-color: #a0d3f5;
+    cursor: not-allowed;
+}
