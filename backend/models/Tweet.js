@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const tweetSchema = new mongoose.Schema({
     tweet: { type: String, required: true },
     email: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+    imageUrl: { type: String },
 
     likes: [{
         user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },

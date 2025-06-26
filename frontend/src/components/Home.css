@@ -207,3 +207,30 @@ body {
     font-size: 0.85rem;
     color: var(--secondary-color);
 }
+
+.tweet-image-preview {
+    margin-top: 10px;
+    text-align: center;
+}
+
+.tweet-preview-img {
+    max-width: 100%;
+    max-height: 300px;
+    border-radius: 10px;
+    object-fit: cover;
+}
+
+.tweet-action-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.image-select-btn {
+    background-color: #e6ecf0;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+}

@@ -4,6 +4,12 @@ const express = require('express');
 const router = express.Router();
 const Tweet = require('../models/Tweet');
 const User = require('../models/User');
+const {
+    uploadTweetImageMiddleware,
+    createTweetController,
+} = require("../controllers/tweetController");
+
+router.post("/create", uploadTweetImageMiddleware, createTweetController);
 
 
 // GET All tweets

@@ -17,7 +17,7 @@ const formatDate = (dateString) => {
   });
 };
 
-const Tweet = ({ tweet, user, tweetedAt, user_id, tweet_id, likes = [], comments = [], saved = [] }) => {
+const Tweet = ({ tweet, user, tweetedAt, user_id, tweet_id, likes = [], comments = [], saved = [], imageUrl }) => {
   const [liked, setLiked] = useState(false);
   const [savedTweet, setSavedTweet] = useState(false);
   const [likeCount, setLikeCount] = useState(likes.length);
@@ -96,26 +96,26 @@ const Tweet = ({ tweet, user, tweetedAt, user_id, tweet_id, likes = [], comments
   };
 
   const handlePostComment = async () => {
-  if (!newComment.trim()) return;
+    if (!newComment.trim()) return;
 
-  try {
-    setIsSubmitting(true);
-    await axios.post(`${API_BASE_URL}/api/tweets/comment/${tweet_id}`, {
-      userId: currentUserId,
-      comment: newComment.trim(),
-    });
-    setNewComment(""); // Clear textarea
+    try {
+      setIsSubmitting(true);
+      await axios.post(`${API_BASE_URL}/api/tweets/comment/${tweet_id}`, {
+        userId: currentUserId,
+        comment: newComment.trim(),
+      });
+      setNewComment(""); // Clear textarea
 
-    // Refresh comments
-    const response = await axios.get(`${API_BASE_URL}/api/tweets/comments/${tweet_id}`);
-    setCommentsList(response.data.comments || []); // ✅ Fix here
-  } catch (error) {
-    console.error("Error posting comment:", error);
-    alert("Failed to post comment.");
-  } finally {
-    setIsSubmitting(false);
-  }
-};
+      // Refresh comments
+      const response = await axios.get(`${API_BASE_URL}/api/tweets/comments/${tweet_id}`);
+      setCommentsList(response.data.comments || []); // ✅ Fix here
+    } catch (error) {
+      console.error("Error posting comment:", error);
+      alert("Failed to post comment.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
 
   const goToProfile = () => {
@@ -151,6 +151,12 @@ const Tweet = ({ tweet, user, tweetedAt, user_id, tweet_id, likes = [], comments
         </div>
 
         <div className="tweet-content">{tweet}</div>
+        {imageUrl && (
+          <div className="tweet-image-container">
+            <img src={imageUrl} alt="Tweet visual" className="tweet-image" />
+          </div>
+        )}
+
 
         <div className="tweet-reactions">
           <div className="reaction-group" onClick={handleLike}>
@@ -191,6 +197,11 @@ const Tweet = ({ tweet, user, tweetedAt, user_id, tweet_id, likes = [], comments
             </div>
           </div>
           <div className="modal-tweet-content">{tweet}</div>
+          {imageUrl && (
+            <div className="modal-tweet-image-container">
+              <img src={imageUrl} alt="Tweet visual" className="modal-tweet-image" />
+            </div>
+          )}
         </div>
 
         <div className="comment-input-container">

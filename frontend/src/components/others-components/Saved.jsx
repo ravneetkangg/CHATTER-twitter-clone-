@@ -42,6 +42,8 @@ const Saved = () => {
               likes={tweet.likes || []}
               saved={tweet.saved || []}
               comments={tweet.comments || []}
+              imageUrl={tweet.imageUrl}
+
             />
           ))
         ) : (

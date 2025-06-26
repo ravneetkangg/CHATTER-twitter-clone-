@@ -37,6 +37,8 @@ const UserTweets = ({ userId }) => {
             likes={tweet.likes || []}
             saved={tweet.saved || []}
             comments={tweet.comments || []}
+            imageUrl={tweet.imageUrl}
+
           />
         ))
       ) : (

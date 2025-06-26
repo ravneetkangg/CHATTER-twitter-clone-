@@ -13,6 +13,8 @@ const Home = () => {
 
   const [tweetContent, setTweetContent] = useState("");
   const [userData, setUserData] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const fileInputRef = useRef(null);
 
   // Fetch full user profile using _id from sessionStorage
   useEffect(() => {
@@ -52,19 +54,36 @@ const Home = () => {
   };
 
   const handlePostTweet = async () => {
-    try {
-      const response = await axios.post(`${API_BASE_URL}/api/tweets/create`, {
-        tweet: tweetContent,
-        email: userData.email,
-      });
-      console.log("Tweet posted successfully:", response.data);
-      setTweetContent("");
-      adjustTextareaHeight();
-    } catch (error) {
-      console.error("Error posting tweet:", error);
-      alert("Failed to post tweet. Please try again.");
+  if (!tweetContent.trim() && !selectedImage) {
+    alert("Tweet cannot be empty");
+    return;
+  }
+
+  try {
+    const formData = new FormData();
+    formData.append("tweet", tweetContent);
+    formData.append("email", userData.email);
+
+    if (selectedImage) {
+      formData.append("image", selectedImage);
     }
-  };
+
+    const response = await axios.post(`${API_BASE_URL}/api/tweets/create`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    console.log("Tweet posted successfully:", response.data);
+    setTweetContent("");
+    setSelectedImage(null);
+    adjustTextareaHeight();
+  } catch (error) {
+    console.error("Error posting tweet:", error);
+    alert("Failed to post tweet. Please try again.");
+  }
+};
+
 
   const formattedJoinDate = userData?.createdAt
     ? new Date(userData.createdAt).toLocaleDateString("en-US", {
@@ -77,17 +96,41 @@ const Home = () => {
     <div className="main-container">
       <div className="tweets-container">
         <div className="post-your-tweet">
-          <textarea
-            className="tweet-input"
-            ref={textareaRef}
-            value={tweetContent}
-            onChange={handleTweetChange}
-            placeholder="What's happening?"
-          />
-          <button className="post-btn" onClick={handlePostTweet}>
-            Tweet
-          </button>
-        </div>
+  <textarea
+    className="tweet-input"
+    ref={textareaRef}
+    value={tweetContent}
+    onChange={handleTweetChange}
+    placeholder="What's happening?"
+  />
+
+  {/* Image Preview */}
+  {selectedImage && (
+    <div className="tweet-image-preview">
+      <img src={URL.createObjectURL(selectedImage)} alt="Preview" className="tweet-preview-img" />
+    </div>
+  )}
+
+  {/* Hidden File Input */}
+  <input
+    type="file"
+    accept="image/*"
+    ref={fileInputRef}
+    onChange={(e) => setSelectedImage(e.target.files[0])}
+    style={{ display: "none" }}
+  />
+
+  <div className="tweet-action-row">
+    <button className="image-select-btn" onClick={() => fileInputRef.current.click()}>
+      📷 Add Image
+    </button>
+
+    <button className="post-btn" onClick={handlePostTweet}>
+      Tweet
+    </button>
+  </div>
+</div>
+
         <div className="all-tweets-area">
           <AllTweetsArea handlePostTweet={handlePostTweet} />
         </div>
