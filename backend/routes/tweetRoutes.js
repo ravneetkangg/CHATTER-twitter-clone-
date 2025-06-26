@@ -4,7 +4,6 @@ const express = require('express');
 const router = express.Router();
 const Tweet = require('../models/Tweet');
 const User = require('../models/User');
-const mongoose = require('mongoose');
 
 
 // GET All tweets
@@ -71,7 +70,6 @@ router.delete('/delete/:tweetId', async(req, res) => {
 });
 
 
-
 router.put('/like/:tweetId', async(req, res) => {
     try {
         const { userId } = req.body;
@@ -79,23 +77,15 @@ router.put('/like/:tweetId', async(req, res) => {
 
         if (!tweet) return res.status(404).json({ message: "Tweet not found" });
 
-        // Safely handle likes that may be plain ObjectIds or full objects
-        const alreadyLiked = tweet.likes.some(like => {
-            if (like && typeof like === 'object') {
-                if (like.user) {
-                    return like.user.toString() === userId;
-                }
-                // If `like` itself is an ObjectId (old format)
-                return like.toString() === userId;
-            }
-            return false;
-        });
+        // Safely handle if likes is undefined
+        if (!Array.isArray(tweet.likes)) {
+            tweet.likes = [];
+        }
+
+        const alreadyLiked = tweet.likes.some(like => like.user.toString() === userId);
 
         if (!alreadyLiked) {
-            tweet.likes.push({
-                user: mongoose.Types.ObjectId(userId),
-                likedAt: new Date()
-            });
+            tweet.likes.push({ user: userId, likedAt: new Date() });
             await tweet.save();
         }
 
