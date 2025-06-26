@@ -4,6 +4,7 @@ const express = require('express');
 const router = express.Router();
 const Tweet = require('../models/Tweet');
 const User = require('../models/User');
+const mongoose = require('mongoose');
 
 
 // GET All tweets
