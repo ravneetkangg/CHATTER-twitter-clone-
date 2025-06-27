@@ -1,14 +1,76 @@
 const User = require("../models/User");
 const multer = require("multer");
 const multerS3 = require("multer-s3");
-const AWS = require("aws-sdk");
+const s3 = require("../config/s3");
+const bcrypt = require("bcrypt");
+const { sendEmail } = require("../utils/mailService");
+
+const registerUser = async(req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        // Check if user already exists
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            return res.status(400).json({ message: "User already exists" });
+        }
+
+        // Hash the password
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        // Create and save user
+        const user = new User({ email, password: hashedPassword });
+        await user.save();
+
+        // sending welcome email
+        try {
+            await sendEmail(email, "Welcome to Chatter App!", "Thanks for signing up with Chatter App!");
+        } catch (err) {
+            console.error("Email send failed:", err.message);
+        }
 
 
-const s3 = new AWS.S3({
-    accessKeyId: process.env.AWS_ACCESS_KEY,
-    secretAccessKey: process.env.AWS_SECRET_KEY,
-    region: process.env.AWS_REGION,
-});
+        // Fetch full document including timestamps/defaults
+        const newUser = await User.findOne({ email });
+
+        // Respond with new user
+        res.status(201).json({
+            message: "User registered successfully",
+            user: newUser,
+        });
+    } catch (error) {
+        console.error("Register Error:", error.message);
+        res.status(500).json({ message: "Error registering user" });
+    }
+};
+
+
+const loginUser = async(req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        // Get user with password for comparison
+        const userWithPassword = await User.findOne({ email });
+        if (!userWithPassword) {
+            return res.status(400).json({ message: "Invalid email" });
+        }
+
+        // Compare password
+        const isMatch = await bcrypt.compare(password, userWithPassword.password);
+        if (!isMatch) {
+            return res.status(400).json({ message: "Invalid password" });
+        }
+
+        // Fetch user again without password
+        const user = await User.findOne({ email }).select("-password");
+
+        res.status(200).json(user);
+    } catch (error) {
+        console.error("Login Error:", error.message);
+        res.status(500).json({ message: "Error logging in user" });
+    }
+};
+
 
 const upload = multer({
     storage: multerS3({
@@ -53,6 +115,8 @@ const uploadPhotoController = async(req, res) => {
 };
 
 module.exports = {
+    registerUser,
+    loginUser,
     uploadMiddleware: upload.single('photo'),
     uploadPhotoController
 };

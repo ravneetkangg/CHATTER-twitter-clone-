@@ -3,12 +3,8 @@ const User = require("../models/User");
 const AWS = require("aws-sdk");
 const multer = require("multer");
 const path = require("path");
+const s3 = require("../config/s3");
 
-const s3 = new AWS.S3({
-    accessKeyId: process.env.AWS_ACCESS_KEY,
-    secretAccessKey: process.env.AWS_SECRET_KEY,
-    region: process.env.AWS_REGION,
-});
 
 // Multer setup for memory upload
 const storage = multer.memoryStorage();
