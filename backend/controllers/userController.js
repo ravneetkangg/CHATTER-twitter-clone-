@@ -5,45 +5,71 @@ const s3 = require("../config/s3");
 const bcrypt = require("bcrypt");
 const { sendEmail } = require("../utils/mailService");
 
-const registerUser = async(req, res) => {
-    try {
-        const { email, password } = req.body;
+// In-memory OTP store (replace with Redis for production)
+const otpStore = new Map();
 
-        // Check if user already exists
+// Utility to generate 6-digit OTP
+const generateOTP = () => Math.floor(100000 + Math.random() * 900000).toString();
+
+const requestOtp = async(req, res) => {
+    const { email, password } = req.body;
+
+    try {
         const existingUser = await User.findOne({ email });
         if (existingUser) {
             return res.status(400).json({ message: "User already exists" });
         }
 
-        // Hash the password
-        const hashedPassword = await bcrypt.hash(password, 10);
+        const otp = generateOTP();
+        const expiresAt = Date.now() + 5 * 60 * 1000; // 5 mins
 
-        // Create and save user
+        otpStore.set(email, { password, otp, expiresAt });
+
+        await sendEmail(email, "OTP for Chatter App", `Your OTP is: ${otp}`);
+
+        res.status(200).json({ message: "OTP sent to email" });
+    } catch (error) {
+        console.error("Error requesting OTP:", error.message);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+};
+
+const verifyOtp = async(req, res) => {
+    const { email, otp } = req.body;
+    const record = otpStore.get(email);
+
+    if (!record) {
+        return res.status(400).json({ message: "No OTP request found for this email" });
+    }
+
+    if (record.otp !== otp) {
+        return res.status(400).json({ message: "Invalid OTP" });
+    }
+
+    if (Date.now() > record.expiresAt) {
+        otpStore.delete(email);
+        return res.status(400).json({ message: "OTP has expired" });
+    }
+
+    try {
+        const hashedPassword = await bcrypt.hash(record.password, 10);
         const user = new User({ email, password: hashedPassword });
         await user.save();
 
-        // sending welcome email
-        try {
-            await sendEmail(email, "Welcome to Chatter App!", "Thanks for signing up with Chatter App!");
-        } catch (err) {
-            console.error("Email send failed:", err.message);
-        }
+        await sendEmail(email, "Welcome to Chatter App!", "Thanks for signing up with Chatter App!");
+        otpStore.delete(email);
 
+        const newUser = await User.findOne({ email }).select("-password");
 
-        // Fetch full document including timestamps/defaults
-        const newUser = await User.findOne({ email });
-
-        // Respond with new user
         res.status(201).json({
             message: "User registered successfully",
             user: newUser,
         });
     } catch (error) {
-        console.error("Register Error:", error.message);
-        res.status(500).json({ message: "Error registering user" });
+        console.error("Error verifying OTP:", error.message);
+        res.status(500).json({ message: "Error creating user" });
     }
 };
-
 
 const loginUser = async(req, res) => {
     try {
@@ -115,7 +141,8 @@ const uploadPhotoController = async(req, res) => {
 };
 
 module.exports = {
-    registerUser,
+    requestOtp,
+    verifyOtp,
     loginUser,
     uploadMiddleware: upload.single('photo'),
     uploadPhotoController

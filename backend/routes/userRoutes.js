@@ -2,14 +2,18 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
 const {
-    registerUser,
+    requestOtp,
+    verifyOtp,
     loginUser,
     uploadPhotoController,
     uploadMiddleware
 } = require('../controllers/userController');
 
-// Register user
-router.post("/register", registerUser);
+// Request OTP for registration
+router.post("/request-otp", requestOtp);
+
+// Verify OTP and register user
+router.post("/verify-otp", verifyOtp);
 
 // Login user
 router.post("/login", loginUser);
