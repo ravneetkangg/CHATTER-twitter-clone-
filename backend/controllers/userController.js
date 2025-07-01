@@ -23,7 +23,8 @@ const requestOtp = async(req, res) => {
         const otp = generateOTP();
         const expiresAt = Date.now() + 5 * 60 * 1000; // 5 mins
 
-        otpStore.set(email, { password, otp, expiresAt });
+        const name = email.split("@")[0];
+        otpStore.set(email, { password, name, otp, expiresAt });
 
         await sendEmail(email, "OTP for Chatter App", `Your OTP is: ${otp}`);
 
@@ -53,7 +54,7 @@ const verifyOtp = async(req, res) => {
 
     try {
         const hashedPassword = await bcrypt.hash(record.password, 10);
-        const user = new User({ email, password: hashedPassword });
+        const user = new User({ email, password: hashedPassword, name: record.name });
         await user.save();
 
         await sendEmail(email, "Welcome to Chatter App!", "Thanks for signing up with Chatter App!");

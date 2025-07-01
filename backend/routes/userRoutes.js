@@ -134,11 +134,14 @@ router.put('/unfollow/:id', async(req, res) => {
 });
 
 
-// Update DOB and Address together
+// Update name, bio, DOB and address together
 router.put('/update-profile/:id', async(req, res) => {
     try {
-        const { dob, address } = req.body;
+        const { name, bio, dob, address } = req.body;
+
         const updateFields = {};
+        if (name) updateFields.name = name;
+        if (bio) updateFields.bio = bio;
         if (dob) updateFields.dob = dob;
         if (address) updateFields.address = address;
 

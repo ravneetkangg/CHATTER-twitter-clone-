@@ -8,6 +8,8 @@ const EditProfile = () => {
   const userInfo = JSON.parse(sessionStorage.getItem("user"));
   const userId = userInfo?._id;
 
+  const [name, setName] = useState("");
+  const [bio, setBio] = useState("");
   const [dob, setDob] = useState("");
   const [address, setAddress] = useState("");
   const [previewImage, setPreviewImage] = useState(null); // for live preview
@@ -18,6 +20,8 @@ const EditProfile = () => {
       axios
         .get(`${API_BASE_URL}/api/users/${userId}`)
         .then((res) => {
+          setName(res.data.name || "");
+          setBio(res.data.bio || "");
           setDob(res.data.dob?.substring(0, 10) || "");
           setAddress(res.data.address || "");
         })
@@ -47,6 +51,8 @@ const EditProfile = () => {
       }
 
       await axios.put(`${API_BASE_URL}/api/users/update-profile/${userId}`, {
+        name,
+        bio,
         dob,
         address,
       });
@@ -56,6 +62,7 @@ const EditProfile = () => {
       console.error("Error updating profile:", err);
     }
   };
+
   return (
     <div className="edit-profile-page">
       <div className="edit-profile-wrapper">
@@ -74,6 +81,23 @@ const EditProfile = () => {
           />
           <input type="file" accept="image/*" onChange={handleImageChange} />
         </div>
+
+        <label htmlFor="name">Name:</label>
+        <input
+          id="name"
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          className="edit-input"
+        />
+
+        <label htmlFor="bio">Bio:</label>
+        <textarea
+          id="bio"
+          value={bio}
+          onChange={(e) => setBio(e.target.value)}
+          className="edit-input"
+        />
 
         <label htmlFor="dob">Date of Birth:</label>
         <input
