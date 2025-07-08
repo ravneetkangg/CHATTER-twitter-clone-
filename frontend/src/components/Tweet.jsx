@@ -4,9 +4,7 @@ import axios from 'axios';
 import './Tweet.css';
 import { FcLike, FcLikePlaceholder } from "react-icons/fc";
 import { FaRegBookmark, FaBookmark, FaRegComment, FaTrashAlt } from "react-icons/fa";
-import Modal from 'react-modal';
-
-Modal.setAppElement('#root'); // Accessibility setup
+import CommentModal from './CommentModal';
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
@@ -23,9 +21,7 @@ const Tweet = ({ tweet, user, tweetedAt, user_id, tweet_id, likes = [], comments
   const [likeCount, setLikeCount] = useState(likes.length);
   const [commentCount] = useState(comments.length);
   const [showComments, setShowComments] = useState(false);
-  const [commentsList, setCommentsList] = useState([]);
-  const [newComment, setNewComment] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showImageModal, setShowImageModal] = useState(false);
 
   const userInfo = JSON.parse(sessionStorage.getItem('user'));
   const currentUserId = userInfo?._id;
@@ -84,40 +80,6 @@ const Tweet = ({ tweet, user, tweetedAt, user_id, tweet_id, likes = [], comments
     }
   };
 
-  const handleViewComments = async () => {
-    try {
-      const response = await axios.get(`${API_BASE_URL}/api/tweets/comments/${tweet_id}`);
-      setCommentsList(response.data.comments || []);
-      setShowComments(true);
-    } catch (error) {
-      console.error("Error fetching comments:", error);
-      alert("Could not fetch comments.");
-    }
-  };
-
-  const handlePostComment = async () => {
-    if (!newComment.trim()) return;
-
-    try {
-      setIsSubmitting(true);
-      await axios.post(`${API_BASE_URL}/api/tweets/comment/${tweet_id}`, {
-        userId: currentUserId,
-        comment: newComment.trim(),
-      });
-      setNewComment(""); // Clear textarea
-
-      // Refresh comments
-      const response = await axios.get(`${API_BASE_URL}/api/tweets/comments/${tweet_id}`);
-      setCommentsList(response.data.comments || []); // ✅ Fix here
-    } catch (error) {
-      console.error("Error posting comment:", error);
-      alert("Failed to post comment.");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-
   const goToProfile = () => {
     navigate(`/user/${encodeURIComponent(user)}`);
   };
@@ -151,12 +113,18 @@ const Tweet = ({ tweet, user, tweetedAt, user_id, tweet_id, likes = [], comments
         </div>
 
         <div className="tweet-content">{tweet}</div>
+
         {imageUrl && (
           <div className="tweet-image-container">
-            <img src={imageUrl} alt="Tweet visual" className="tweet-image" />
+            <img
+              src={imageUrl}
+              alt="Tweet visual"
+              className="tweet-image"
+              onClick={() => setShowImageModal(true)}
+              style={{ cursor: 'pointer' }}
+            />
           </div>
         )}
-
 
         <div className="tweet-reactions">
           <div className="reaction-group" onClick={handleLike}>
@@ -164,7 +132,7 @@ const Tweet = ({ tweet, user, tweetedAt, user_id, tweet_id, likes = [], comments
             <span className="reaction-count">{likeCount}</span>
           </div>
 
-          <div className="reaction-group" onClick={handleViewComments}>
+          <div className="reaction-group" onClick={() => setShowComments(true)}>
             <FaRegComment className="comment-button" />
             <span className="reaction-count">{commentCount}</span>
           </div>
@@ -175,77 +143,29 @@ const Tweet = ({ tweet, user, tweetedAt, user_id, tweet_id, likes = [], comments
         </div>
       </div>
 
-
-      <Modal
+      {/* Comment Modal */}
+      <CommentModal
         isOpen={showComments}
         onRequestClose={() => setShowComments(false)}
-        className="comment-modal"
-        overlayClassName="comment-modal-overlay"
-      >
-        {/* Close button top right */}
-        <button className="modal-close-button" onClick={() => setShowComments(false)}>
-          ❌
-        </button>
+        tweetId={tweet_id}
+        currentUserId={currentUserId}
+        profilePicUrl={profilePicUrl}
+        tweet={tweet}
+        tweetedAt={tweetedAt}
+        user={user}
+        imageUrl={imageUrl}
+        apiBaseUrl={API_BASE_URL}
+      />
 
-        {/* === Highlighted Main Tweet === */}
-        <div className="modal-tweet">
-          <div className="modal-tweet-header">
-            <img src={profilePicUrl} className="modal-user-avatar" alt="User avatar" />
-            <div>
-              <div className="modal-username">{user}</div>
-              <div className="modal-time">{formatDate(tweetedAt)}</div>
-            </div>
+      {/* Image Modal */}
+      {showImageModal && (
+        <div className="image-modal-overlay" onClick={() => setShowImageModal(false)}>
+          <div className="image-modal-content" onClick={(e) => e.stopPropagation()}>
+            <img src={imageUrl} alt="Full size tweet" className="modal-full-image" />
+            <button className="modal-close-button" onClick={() => setShowImageModal(false)}> ❌</button>
           </div>
-          <div className="modal-tweet-content">{tweet}</div>
-          {imageUrl && (
-            <div className="modal-tweet-image-container">
-              <img src={imageUrl} alt="Tweet visual" className="modal-tweet-image" />
-            </div>
-          )}
         </div>
-
-        <div className="comment-input-container">
-          <textarea
-            value={newComment}
-            onChange={(e) => setNewComment(e.target.value)}
-            placeholder="Write your comment..."
-            rows={3}
-            className="comment-textarea"
-          ></textarea>
-          <button
-            onClick={handlePostComment}
-            disabled={isSubmitting}
-            className="post-comment-btn"
-          >
-            {isSubmitting ? "Posting..." : "Post Comment"}
-          </button>
-        </div>
-
-        {/* === Comment Thread === */}
-        <div className="comment-thread">
-          {commentsList.length > 0 ? (
-            commentsList.map((c, index) => (
-              <div key={index} className="single-comment">
-                <div className="comment-header">
-                  <img
-                    src={`https://chatter-profile-pics.s3.ap-south-1.amazonaws.com/profile-pics/${c.user._id}.jpeg`}
-                    className="comment-user-avatar"
-                    alt="User avatar"
-                  />
-                  <div>
-                    <div className="comment-username">{c.user.email}</div>
-                    <div className="comment-time">{formatDate(c.createdAt)}</div>
-                  </div>
-                </div>
-                <div className="modal-tweet-content">{c.comment}</div>
-              </div>
-            ))
-          ) : (
-            <p style={{ textAlign: 'center', color: '#666' }}>No comments yet.</p>
-          )}
-        </div>
-      </Modal>
-
+      )}
     </>
   );
 };

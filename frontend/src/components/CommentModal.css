@@ -1,0 +1,162 @@
+.comment-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.3);
+    /* Slightly dimmer, less opaque */
+    backdrop-filter: blur(2px);
+    /* 🌫️ Subtle blur */
+    -webkit-backdrop-filter: blur(3px);
+    /* Safari support */
+    z-index: 2000;
+}
+
+.comment-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 95%;
+    max-width: 550px;
+    max-height: 80vh;
+    background: #ffffff;
+    padding: 24px;
+    overflow-y: auto;
+    border-radius: 16px;
+    box-shadow: 0 16px 28px rgba(0, 0, 0, 0.2);
+    z-index: 2100;
+    /* higher than overlay & navbar */
+}
+
+.modal-close-button {
+    position: absolute;
+    top: 16px;
+    right: 20px;
+    font-size: 20px;
+    color: #333;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.modal-close-button:hover {
+    color: #000;
+}
+
+.modal-tweet {
+    background-color: #f5f8fa;
+    border-left: 4px solid #1da1f2;
+    border-radius: 12px;
+    padding: 18px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.07);
+}
+
+.modal-tweet-header,
+.comment-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 10px;
+}
+
+.modal-user-avatar,
+.comment-user-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.modal-username,
+.comment-username {
+    font-weight: 600;
+    font-size: 17px;
+    color: #222;
+}
+
+.modal-time,
+.comment-time {
+    font-size: 14px;
+    color: #777;
+}
+
+.modal-tweet-content,
+.comment-content {
+    margin-top: 8px;
+    font-size: 16.5px;
+    color: #333;
+    line-height: 1.6;
+}
+
+
+/* Remove left shift and border */
+
+.comment-thread {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding-left: 0;
+    margin-left: 0;
+    border-left: none;
+}
+
+.single-comment {
+    padding: 8px 0;
+    border-bottom: 1px solid #f2f2f2;
+    font-size: 15.5px;
+    color: #222;
+}
+
+.comment-input-container {
+    display: flex;
+    flex-direction: column;
+    margin-top: 16px;
+    gap: 10px;
+}
+
+.comment-textarea {
+    resize: vertical;
+    min-height: 80px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    font-size: 15px;
+    width: 100%;
+    font-family: inherit;
+    outline-color: #1da1f2;
+}
+
+.post-comment-btn {
+    align-self: flex-end;
+    padding: 8px 20px;
+    background-color: #1da1f2;
+    color: white;
+    font-size: 15px;
+    font-weight: 600;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.post-comment-btn:hover {
+    background-color: #0d8ddb;
+}
+
+.post-comment-btn:disabled {
+    background-color: #a0d3f5;
+    cursor: not-allowed;
+}
+
+.modal-tweet-image-container {
+    margin-top: 12px;
+    text-align: center;
+}
+
+.modal-tweet-image {
+    max-width: 100%;
+    max-height: 450px;
+    border-radius: 12px;
+    object-fit: cover;
+    display: block;
+    margin: 0 auto;
+}
