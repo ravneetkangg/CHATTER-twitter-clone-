@@ -22,6 +22,10 @@ app.get('/', (req, res) => {
     res.send("Hello, World!");
 });
 
+app.get('/health', (req, res) => {
+    res.status(200).json({ status: 'UP', timestamp: new Date().toISOString() });
+});
+
 app.listen(PORT, () => {
     console.log(`Server started on port ${PORT}`.green.bold);
 });
