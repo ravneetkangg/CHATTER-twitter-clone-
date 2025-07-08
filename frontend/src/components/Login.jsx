@@ -45,8 +45,8 @@ const Login = () => {
     const handleGuestLogin = async () => {
         try {
             const response = await axios.post(`${API_BASE_URL}/api/users/login`, {
-                email: "guest@gmail.com",
-                password: "guest"
+                email: "guest@demo.com",
+                password: "ravneet"
             });
 
             console.log("Guest login:", response.data);
