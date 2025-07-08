@@ -6,9 +6,8 @@ import {
   FaMapMarkerAlt,
   FaBirthdayCake,
 } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import TweetsSection from "../../components/common/TweetsSection";
-
 import "./Profile.css";
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
@@ -19,7 +18,10 @@ const Profile = () => {
   const [modalTitle, setModalTitle] = useState("");
   const [modalUsers, setModalUsers] = useState([]);
   const [displayCount, setDisplayCount] = useState(5);
-  const [activeTab, setActiveTab] = useState("tweets"); // default tab
+  const [activeTab, setActiveTab] = useState("tweets");
+
+  const { tab } = useParams(); // e.g., liked/saved
+  const navigate = useNavigate();
 
   const userInfo = JSON.parse(sessionStorage.getItem("user"));
   const userId = userInfo?._id;
@@ -41,6 +43,27 @@ const Profile = () => {
       sessionStorage.removeItem("showImageDelayPopup");
     }
   }, [fetchUser]);
+
+  // Handle URL tab syncing
+  useEffect(() => {
+    if (!tab || tab === "tweets") {
+      setActiveTab("tweets");
+    } else if (["liked", "saved"].includes(tab)) {
+      setActiveTab(tab);
+    } else {
+      setActiveTab("tweets");
+      navigate("/profile"); // fallback if invalid tab
+    }
+  }, [tab, navigate]);
+
+  const handleTabClick = (selectedTab) => {
+    setActiveTab(selectedTab);
+    if (selectedTab === "tweets") {
+      navigate("/profile");
+    } else {
+      navigate(`/profile/${selectedTab}`);
+    }
+  };
 
   const openModal = (type) => {
     if (!user) return;
@@ -72,7 +95,7 @@ const Profile = () => {
     setShowModal(false);
     setModalUsers([]);
     setDisplayCount(5);
-    fetchUser(); // Refresh updated follow states
+    fetchUser();
   };
 
   const handleFollowToggle = async (targetUserId, currentlyFollowing) => {
@@ -97,7 +120,6 @@ const Profile = () => {
   return (
     <div className="profile-page">
       <div className="profile-full-wrapper">
-
         <div className="profile-wrapper">
           <div className="profile-photo">
             <img src={userInfo.photo} alt="Profile" />
@@ -155,19 +177,19 @@ const Profile = () => {
         <div className="profile-tabs">
           <button
             className={activeTab === "tweets" ? "active-tab" : ""}
-            onClick={() => setActiveTab("tweets")}
+            onClick={() => handleTabClick("tweets")}
           >
             Tweets
           </button>
           <button
             className={activeTab === "liked" ? "active-tab" : ""}
-            onClick={() => setActiveTab("liked")}
+            onClick={() => handleTabClick("liked")}
           >
             Liked
           </button>
           <button
             className={activeTab === "saved" ? "active-tab" : ""}
-            onClick={() => setActiveTab("saved")}
+            onClick={() => handleTabClick("saved")}
           >
             Saved
           </button>
@@ -175,12 +197,27 @@ const Profile = () => {
 
         {/* === Render Tab Content === */}
         <div className="profile-tab-content">
-          {activeTab === 'liked' && <TweetsSection type="liked" endpoint={`/api/tweets/liked/${user._id}`}
-            title="Liked Tweets" />}
-          {activeTab === 'saved' && <TweetsSection type="saved" endpoint={`/api/tweets/saved/${user._id}`}
-            title="Saved Tweets" />}
-          {activeTab === 'tweets' && <TweetsSection type="Posted" endpoint={`/api/tweets/posted/${user._id}`}
-            title="posted Tweets" />}
+          {activeTab === "liked" && (
+            <TweetsSection
+              type="liked"
+              endpoint={`/api/tweets/liked/${user._id}`}
+              title="Liked Tweets"
+            />
+          )}
+          {activeTab === "saved" && (
+            <TweetsSection
+              type="saved"
+              endpoint={`/api/tweets/saved/${user._id}`}
+              title="Saved Tweets"
+            />
+          )}
+          {activeTab === "tweets" && (
+            <TweetsSection
+              type="Posted"
+              endpoint={`/api/tweets/posted/${user._id}`}
+              title="Posted Tweets"
+            />
+          )}
         </div>
 
         {/* === Followers/Following Modal === */}
@@ -212,9 +249,7 @@ const Profile = () => {
 
                       <button
                         className={u.isFollowing ? "unfollow-btn" : "follow-btn"}
-                        onClick={() =>
-                          handleFollowToggle(u._id, u.isFollowing)
-                        }
+                        onClick={() => handleFollowToggle(u._id, u.isFollowing)}
                       >
                         {u.isFollowing ? "Unfollow" : "Follow"}
                       </button>

@@ -21,6 +21,7 @@ function App() {
           <Route path="/" element={<Login />} />
           <Route path="/home" element={<Home />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/profile/:tab" element={<Profile />} />
           <Route path="/profile/edit" element={<EditProfile />} />
           <Route path="/user/:email" element={<OtherUserProfile />} />
           <Route path="*" element={<StarRoute />} />
