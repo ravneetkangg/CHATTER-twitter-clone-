@@ -1,0 +1,217 @@
+:root {
+    --primary-color: #4f46e5;
+    /* Deep Indigo */
+    --primary-hover: #4338ca;
+    --accent-color: #ec4899;
+    /* Pink accent */
+    --gradient-bg: linear-gradient(135deg, #6366f1, #ec4899);
+    --text-dark: #1f2937;
+    --text-light: #6b7280;
+    --bg-white: #ffffff;
+    --input-border: #d1d5db;
+    --input-focus: #6366f1;
+    --shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+}
+
+
+/* Outer wrapper */
+
+.form-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: #f3f4f6;
+    padding: 20px;
+}
+
+
+/* Shared form container */
+
+.login-form,
+.register-form {
+    background: var(--bg-white);
+    padding: 40px 32px;
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    width: 100%;
+    max-width: 400px;
+    box-sizing: border-box;
+    text-align: center;
+    min-height: 440px;
+    transition: all 0.4s ease;
+}
+
+
+/* Headings */
+
+.login-form h2,
+.register-form h2 {
+    font-size: 28px;
+    margin-bottom: 24px;
+    color: var(--text-dark);
+    font-weight: 700;
+}
+
+
+/* Inputs */
+
+.login-form input,
+.register-form input {
+    width: 100%;
+    padding: 14px 16px;
+    margin: 12px 0;
+    border: 1px solid var(--input-border);
+    border-radius: 8px;
+    font-size: 16px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    background-color: #f9fafb;
+}
+
+.login-form input:focus,
+.register-form input:focus {
+    border-color: var(--input-focus);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+    outline: none;
+}
+
+
+/* Buttons */
+
+.login-form button,
+.register-form button {
+    width: 100%;
+    padding: 14px;
+    background: var(--primary-color);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+    margin-top: 12px;
+}
+
+.login-form button:hover,
+.register-form button:hover {
+    background: var(--primary-hover);
+    transform: translateY(-2px);
+}
+
+
+/* Bottom text */
+
+.login-form p,
+.register-form p {
+    margin-top: 20px;
+    font-size: 14px;
+    color: var(--text-light);
+}
+
+.login-form a,
+.register-form a {
+    color: var(--primary-color);
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.login-form a:hover,
+.register-form a:hover {
+    text-decoration: underline;
+}
+
+.separator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 24px 0 12px;
+    width: 100%;
+    position: relative;
+}
+
+.separator::before,
+.separator::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background-color: #ccc;
+    margin: 0 12px;
+}
+
+.separator span {
+    color: #666;
+    font-size: 14px;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+.guest-login-container {
+    margin-top: 20px;
+    text-align: center;
+    position: relative;
+}
+
+.guest-login-btn {
+    position: relative;
+    background: linear-gradient(135deg, #06b6d4, #3b82f6);
+    color: white;
+    font-weight: 600;
+    padding: 14px 32px;
+    /* Increased horizontal padding */
+    min-width: 300px;
+    /* Ensures button is always at least this wide */
+    border-radius: 30px;
+    font-size: 1rem;
+    cursor: pointer;
+    z-index: 1;
+    border: none;
+    box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    animation: guest-pop 1.8s infinite ease-in-out;
+    overflow: hidden;
+}
+
+
+/* Rainbow border using ::before */
+
+.guest-login-btn::before {
+    content: "";
+    position: absolute;
+    top: -3px;
+    left: -3px;
+    right: -3px;
+    bottom: -3px;
+    z-index: -1;
+    background: linear-gradient(45deg, red, orange, yellow, green, blue, indigo, violet, red);
+    border-radius: 35px;
+    animation: rainbow-border 5s linear infinite;
+    background-size: 400% 400%;
+}
+
+@keyframes rainbow-border {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.guest-login-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 24px rgba(59, 130, 246, 0.5);
+}
+
+@keyframes guest-pop {
+    0%,
+    100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.06);
+    }
+}
