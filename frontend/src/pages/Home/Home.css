@@ -1,17 +1,4 @@
-:root {
-    --primary-color: #000;
-    --secondary-color: #555;
-    --bg-light: #f5f8fa;
-    --white: #fff;
-    --border-color: #e3e3e3;
-    --hover-bg: #f0f0f0;
-    --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-}
-
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: var(--bg-light);
-}
+/* === Main Layout === */
 
 .main-container {
     display: flex;
@@ -26,14 +13,13 @@ body {
     min-width: 0;
     padding: 24px;
     border-right: 1px solid #ccc;
-    background-color: var(--white);
+    background-color: #fff;
     border-radius: 12px;
-    box-shadow: var(--shadow);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
-.all-tweets-area {
-    padding: 24px 0;
-}
+
+/* === Tweet Posting Section === */
 
 .post-your-tweet {
     padding-bottom: 20px;
@@ -55,11 +41,26 @@ body {
 .tweet-input:focus {
     min-height: 180px;
     outline: none;
-    border-color: var(--primary-color);
+    border-color: #000;
+}
+
+.tweet-action-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.image-select-btn {
+    background-color: #e6ecf0;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 20px;
+    cursor: pointer;
 }
 
 .post-btn {
-    background-color: var(--primary-color);
+    background-color: #000;
     color: white;
     padding: 10px 24px;
     border: none;
@@ -72,9 +73,27 @@ body {
 
 .post-btn:hover {
     background-color: white;
-    color: var(--primary-color);
-    border: 1px solid var(--primary-color);
+    color: #000;
+    border: 1px solid #000;
 }
+
+
+/* === Image Preview === */
+
+.tweet-image-preview {
+    margin-top: 10px;
+    text-align: center;
+}
+
+.tweet-preview-img {
+    max-width: 100%;
+    max-height: 300px;
+    border-radius: 10px;
+    object-fit: cover;
+}
+
+
+/* === Right Sidebar User Info === */
 
 .info-container {
     width: 28vw;
@@ -89,11 +108,11 @@ body {
 }
 
 .user-info {
-    background-color: var(--white);
-    border: 1px solid var(--border-color);
+    background-color: #fff;
+    border: 1px solid #e3e3e3;
     border-radius: 16px;
     padding: 28px 16px;
-    box-shadow: var(--shadow);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     text-align: center;
     display: flex;
     flex-direction: column;
@@ -112,15 +131,15 @@ body {
     align-items: center;
     justify-content: center;
     font-size: 32px;
-    border: 3px solid var(--primary-color);
-    box-shadow: var(--shadow);
+    border: 3px solid #000;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     color: white;
 }
 
 .user-info p {
     margin: 4px 0;
     font-size: 0.95rem;
-    color: var(--primary-color);
+    color: #000;
     word-break: break-word;
     line-height: 1.5;
 }
@@ -143,48 +162,14 @@ body {
     justify-content: center;
     gap: 6px;
     font-size: 0.9rem;
-    color: var(--secondary-color);
+    color: #555;
 }
-
-.file-input-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 6px;
-    margin-top: 10px;
-}
-
-.file-input-label,
-.upload-btn {
-    background-color: var(--primary-color);
-    color: var(--white);
-    padding: 8px 16px;
-    border: 1px solid var(--primary-color);
-    border-radius: 6px;
-    font-size: 0.9rem;
-    cursor: pointer;
-    transition: 0.3s ease;
-}
-
-.file-input-label:hover,
-.upload-btn:hover {
-    background-color: white;
-    color: var(--primary-color);
-}
-
-.file-name {
-    font-size: 0.8rem;
-    color: #666;
-}
-
-
-/* Profile Stats */
 
 .user-stats {
     display: flex;
     justify-content: space-between;
     padding-top: 16px;
-    border-top: 1px solid var(--border-color);
+    border-top: 1px solid #e3e3e3;
     margin: 0 20px;
     gap: 20px;
 }
@@ -197,37 +182,10 @@ body {
 .user-stats .stat strong {
     display: block;
     font-size: 1.2rem;
-    color: var(--primary-color);
+    color: #000;
 }
 
 .user-stats .stat span {
     font-size: 0.85rem;
-    color: var(--secondary-color);
-}
-
-.tweet-image-preview {
-    margin-top: 10px;
-    text-align: center;
-}
-
-.tweet-preview-img {
-    max-width: 100%;
-    max-height: 300px;
-    border-radius: 10px;
-    object-fit: cover;
-}
-
-.tweet-action-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 10px;
-}
-
-.image-select-btn {
-    background-color: #e6ecf0;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 20px;
-    cursor: pointer;
+    color: #555;
 }

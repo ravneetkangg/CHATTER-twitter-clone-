@@ -1,40 +1,40 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import './AllTweetsArea.css';
 import Tweet from './Tweet';
+import './TweetsSection.css';
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
-const AllTweetsArea = ({ handlePostTweet }) => {
-  const [array, setArray] = useState([]);
+const TweetsSection = ({ endpoint, title, emptyMessage = "No tweets found." }) => {
+  const [tweets, setTweets] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchTweets = async () => {
       try {
-        const response = await axios.get(`${API_BASE_URL}/api/tweets/tweets`);
-        setArray(response.data);
+        const response = await axios.get(`${API_BASE_URL}${endpoint}`);
+        setTweets(response.data || []);
       } catch (error) {
-        console.error('Error fetching tweets:', error);
+        console.error("Error fetching tweets:", error);
       } finally {
         setLoading(false);
       }
     };
 
     fetchTweets();
-  }, [handlePostTweet]);
+  }, [endpoint]);
 
   return (
-    <>
+    <div className="tweet-feed-area">
       {loading ? (
         <p className="loading">Loading tweets...</p>
-      ) : array.length > 0 ? (
-        array.map((tweet, index) => (
+      ) : tweets.length > 0 ? (
+        tweets.map((tweet, index) => (
           <Tweet
             key={index}
             tweet={tweet.tweet}
-            user={tweet.email.email}
-            user_id={tweet.email._id}
+            user={tweet.email?.email}
+            user_id={tweet.email?._id}
             tweetedAt={tweet.createdAt}
             tweet_id={tweet._id}
             likes={tweet.likes || []}
@@ -44,10 +44,10 @@ const AllTweetsArea = ({ handlePostTweet }) => {
           />
         ))
       ) : (
-        <p>No tweets available</p>
+        <p className="no-tweets-message">{emptyMessage}</p>
       )}
-    </>
+    </div>
   );
 };
 
-export default AllTweetsArea;
+export default TweetsSection;

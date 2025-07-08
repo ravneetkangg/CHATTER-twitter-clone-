@@ -7,12 +7,12 @@ import {
   FaBirthdayCake,
 } from "react-icons/fa";
 
-import UserTweets from "./UserTweets";
+import TweetsSection from "../../components/common/TweetsSection";
 import "./Profile.css";
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
-const UserProfile = () => {
+const OtherUserProfile = () => {
   const { email } = useParams();
   const navigate = useNavigate();
 
@@ -138,11 +138,11 @@ const UserProfile = () => {
 
         {/* === Only Tweet Section === */}
         <div className="profile-tab-content">
-          <UserTweets userId={user._id} />
+          <TweetsSection type="user" endpoint={`/api/tweets/posted/${user._id}`} />
         </div>
       </div>
     </div>
   );
 };
 
-export default UserProfile;
+export default OtherUserProfile;
