@@ -7,10 +7,7 @@ import {
   FaBirthdayCake,
 } from "react-icons/fa";
 import { Link } from "react-router-dom";
-
-import UserTweets from "./UserTweets";
-import Liked from "./Likes";
-import Saved from "./Saved";
+import TweetsSection from "../../components/common/TweetsSection";
 
 import "./Profile.css";
 
@@ -178,9 +175,12 @@ const Profile = () => {
 
         {/* === Render Tab Content === */}
         <div className="profile-tab-content">
-          {activeTab === "tweets" && <UserTweets userId={userId} />}
-          {activeTab === "liked" && <Liked userId={userId} />}
-          {activeTab === "saved" && <Saved userId={userId} />}
+          {activeTab === 'liked' && <TweetsSection type="liked" endpoint={`/api/tweets/liked/${user._id}`}
+            title="Liked Tweets" />}
+          {activeTab === 'saved' && <TweetsSection type="saved" endpoint={`/api/tweets/saved/${user._id}`}
+            title="Saved Tweets" />}
+          {activeTab === 'tweets' && <TweetsSection type="Posted" endpoint={`/api/tweets/posted/${user._id}`}
+            title="posted Tweets" />}
         </div>
 
         {/* === Followers/Following Modal === */}

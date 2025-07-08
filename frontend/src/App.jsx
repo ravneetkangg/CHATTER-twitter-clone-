@@ -1,15 +1,14 @@
 import React from 'react';
 import "./App.css"
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import StarRoute from './components/StarRoute';
-import Navbar from './components/Navbar';
-import Register from './components/Register';
-import Login from './components/Login';
-import Home from './components/Home';
-import Profile from './components/others-components/Profile';
-import EditProfile from './components/others-components/EditProfile';
-import UserProfile from './components/others-components/UserProfile';
-
+import StarRoute from './pages/Star/StarRoute';
+import Navbar from './layout/Navbar';
+import Register from './pages/Auth/Register';
+import Login from './pages/Auth/Login';
+import Home from './pages/Home/Home';
+import Profile from './pages/Profile/Profile';
+import EditProfile from './pages/Profile/EditProfile';
+import OtherUserProfile from './pages/Profile/OtherUserProfile';
 
 function App() {
   return (
@@ -23,7 +22,7 @@ function App() {
           <Route path="/home" element={<Home />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/profile/edit" element={<EditProfile />} />
-          <Route path="/user/:email" element={<UserProfile />} />
+          <Route path="/user/:email" element={<OtherUserProfile />} />
           <Route path="*" element={<StarRoute />} />
         </Routes>
       </Router>
