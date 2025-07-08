@@ -7,6 +7,7 @@ const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
 const UserTweets = ({ userId }) => {
   const [userTweets, setUserTweets] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchUserTweets = async () => {
@@ -15,6 +16,8 @@ const UserTweets = ({ userId }) => {
         setUserTweets(response.data || []);
       } catch (error) {
         console.error("Error fetching user's tweets:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -25,7 +28,9 @@ const UserTweets = ({ userId }) => {
 
   return (
     <div className="tweets-container">
-      {userTweets.length > 0 ? (
+      {loading ? (
+        <p className="loading">Loading your tweets...</p>
+      ) : userTweets.length > 0 ? (
         userTweets.map((tweet, index) => (
           <Tweet
             key={index}
@@ -38,7 +43,6 @@ const UserTweets = ({ userId }) => {
             saved={tweet.saved || []}
             comments={tweet.comments || []}
             imageUrl={tweet.imageUrl}
-
           />
         ))
       ) : (

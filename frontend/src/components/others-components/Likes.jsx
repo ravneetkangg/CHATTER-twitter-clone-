@@ -7,6 +7,7 @@ const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
 const Likes = ({ handleLogout }) => {
   const [likedTweets, setLikedTweets] = useState([]);
+  const [loading, setLoading] = useState(true);
   const user = JSON.parse(sessionStorage.getItem('user'));
 
   useEffect(() => {
@@ -16,6 +17,8 @@ const Likes = ({ handleLogout }) => {
         setLikedTweets(response.data || []);
       } catch (error) {
         console.error("Error fetching liked tweets:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -23,28 +26,28 @@ const Likes = ({ handleLogout }) => {
   }, [user]);
 
   return (
-    <>
-        <div className="tweets-container">
-          {likedTweets.length > 0 ? (
-            likedTweets.map((tweet, index) => (
-              <Tweet
-                key={index}
-                tweet={tweet.tweet}
-                user={tweet.email.email}
-                user_id={tweet.email._id}
-                tweetedAt={tweet.createdAt}
-                tweet_id={tweet._id}
-                likes={tweet.likes || []}
-                saved={tweet.saved || []}
-                comments={tweet.comments || []}
-                imageUrl={tweet.imageUrl}
-              />
-            ))
-          ) : (
-            <p className="no-likes-message">You haven’t liked any tweets yet.</p>
-          )}
-        </div>
-    </>
+    <div className="tweets-container">
+      {loading ? (
+        <p className="loading">Loading liked tweets...</p>
+      ) : likedTweets.length > 0 ? (
+        likedTweets.map((tweet, index) => (
+          <Tweet
+            key={index}
+            tweet={tweet.tweet}
+            user={tweet.email.email}
+            user_id={tweet.email._id}
+            tweetedAt={tweet.createdAt}
+            tweet_id={tweet._id}
+            likes={tweet.likes || []}
+            saved={tweet.saved || []}
+            comments={tweet.comments || []}
+            imageUrl={tweet.imageUrl}
+          />
+        ))
+      ) : (
+        <p className="no-likes-message">You haven’t liked any tweets yet.</p>
+      )}
+    </div>
   );
 };
 
