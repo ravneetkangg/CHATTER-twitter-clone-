@@ -1,0 +1,9 @@
+.tweet-feed-area {
+    margin-top: 10px;
+}
+
+.no-tweets-message {
+    font-size: 1.2rem;
+    color: #555;
+    text-align: center;
+}

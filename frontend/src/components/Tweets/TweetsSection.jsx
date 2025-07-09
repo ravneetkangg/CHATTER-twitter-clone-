@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Tweet from './Tweet';
+import Spinner from '../Common/Spinner';
 import './TweetsSection.css';
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
-const TweetsSection = ({ endpoint, title, emptyMessage = "No tweets found." }) => {
+const TweetsSection = ({ endpoint, title, emptyMessage = "No tweets here." }) => {
   const [tweets, setTweets] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -27,7 +28,7 @@ const TweetsSection = ({ endpoint, title, emptyMessage = "No tweets found." }) =
   return (
     <div className="tweet-feed-area">
       {loading ? (
-        <p className="loading">Loading tweets...</p>
+        <Spinner />
       ) : tweets.length > 0 ? (
         tweets.map((tweet, index) => (
           <Tweet

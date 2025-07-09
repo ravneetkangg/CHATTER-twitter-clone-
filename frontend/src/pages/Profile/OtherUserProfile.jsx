@@ -7,7 +7,8 @@ import {
   FaBirthdayCake,
 } from "react-icons/fa";
 
-import TweetsSection from "../../components/common/TweetsSection";
+import Spinner from "../../components/Common/Spinner";
+import TweetsSection from "../../components/Tweets/TweetsSection";
 import "./Profile.css";
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
@@ -21,25 +22,32 @@ const OtherUserProfile = () => {
   const [loggedInUserId, setLoggedInUserId] = useState(null);
 
   useEffect(() => {
-    const loggedInUser = JSON.parse(sessionStorage.getItem("user"));
-    if (loggedInUser) {
+    const fetchProfileData = async () => {
+      const loggedInUser = JSON.parse(sessionStorage.getItem("user"));
+      if (!loggedInUser) return;
+
       setLoggedInUserId(loggedInUser._id);
+
+      // Redirect if viewing own profile
       if (email === loggedInUser.email) {
         navigate("/profile");
         return;
       }
-    }
+
+      try {
+        const res = await axios.get(`${API_BASE_URL}/api/users/by-email/${email}`);
+        const fetchedUser = res.data;
+        setUser(fetchedUser);
+
+        // Check if current user is following
+        setIsFollowing(fetchedUser.followers.includes(loggedInUser._id));
+      } catch (err) {
+        console.error("Error fetching user:", err);
+      }
+    };
 
     if (email) {
-      axios
-        .get(`${API_BASE_URL}/api/users/by-email/${email}`)
-        .then((res) => {
-          setUser(res.data);
-          if (loggedInUser && res.data.followers.includes(loggedInUser._id)) {
-            setIsFollowing(true);
-          }
-        })
-        .catch((err) => console.error("Error fetching user:", err));
+      fetchProfileData();
     }
   }, [email, navigate]);
 
@@ -73,7 +81,7 @@ const OtherUserProfile = () => {
     }
   };
 
-  if (!user) return <div className="loading">Loading user profile...</div>;
+  if (!user) return <Spinner />;
 
   return (
     <div className="profile-page">

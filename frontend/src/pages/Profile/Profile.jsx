@@ -7,7 +7,8 @@ import {
   FaBirthdayCake,
 } from "react-icons/fa";
 import { Link, useParams, useNavigate } from "react-router-dom";
-import TweetsSection from "../../components/common/TweetsSection";
+import Spinner from "../../components/Common/Spinner";
+import TweetsSection from "../../components/Tweets/TweetsSection";
 import "./Profile.css";
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
@@ -115,7 +116,7 @@ const Profile = () => {
     }
   };
 
-  if (!user) return <div className="loading">Loading profile...</div>;
+  if (!user) return <Spinner />;
 
   return (
     <div className="profile-page">

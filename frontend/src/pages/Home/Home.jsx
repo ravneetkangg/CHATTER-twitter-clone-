@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Home.css";
-import TweetsSection from "../../components/common/TweetsSection";
+import TweetsSection from "../../components/Tweets/TweetsSection";
 import { FaPen, FaRegCalendarAlt, FaMapMarkerAlt } from "react-icons/fa";
 import axios from "axios";
 
