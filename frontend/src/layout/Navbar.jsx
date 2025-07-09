@@ -48,9 +48,9 @@ const Navbar = () => {
     return (
         <nav className="navbar">
             <div className='nav-left' onClick={() => navigate('/home')} style={{ cursor: "pointer" }}>
-    <FaTwitter className='site-icon' />
-    <span className="site-title">Chatter</span>
-</div>
+                <FaTwitter className='site-icon' />
+                <span className="site-title">Chatter</span>
+            </div>
 
             {user && (
                 <>
@@ -80,7 +80,7 @@ const Navbar = () => {
 
                     <div className="nav-links">
                         <Link to="/home">Home</Link>
-                        <Link to="/explore">Explore</Link>
+                        <Link to="/notifications">Notifications</Link>
                         <Link to="/profile">Profile</Link>
                     </div>
 
