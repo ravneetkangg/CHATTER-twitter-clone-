@@ -116,8 +116,14 @@ const Profile = () => {
     }
   };
 
-  if (!user) return <Spinner />;
 
+  if (!user) {
+    return (
+      <div className="loading-wrapper">
+        <Spinner />
+      </div>
+    );
+  }
   return (
     <div className="profile-page">
       <div className="profile-full-wrapper">
