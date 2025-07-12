@@ -207,7 +207,7 @@ const Profile = () => {
           {activeTab === "liked" && (
             <TweetsSection
               type="liked"
-              endpoint={`/api/tweets/liked/${user._id}`}
+              endpoint={`/api/likes/liked/${user._id}`}
               title="Liked Tweets"
             />
           )}
