@@ -79,7 +79,7 @@ exports.getChatList = async(req, res) => {
             }
         ]);
 
-        const populatedChats = await Promise.all(
+        let populatedChats = await Promise.all(
             messages.map(async(chat) => {
                 const user = await User.findById(chat._id);
                 return {
@@ -91,6 +91,9 @@ exports.getChatList = async(req, res) => {
                 };
             })
         );
+
+        // ✅ Sort by time in descending order
+        populatedChats.sort((a, b) => new Date(b.time) - new Date(a.time));
 
         res.status(200).json(populatedChats);
     } catch (error) {

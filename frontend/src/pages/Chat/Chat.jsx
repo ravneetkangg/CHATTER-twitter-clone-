@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
+import { FaArrowLeft } from "react-icons/fa";
+import Spinner from "../../components/Common/Spinner";
 import "./Chat.css";
-import { FaArrowLeft } from "react-icons/fa"; // Add this at the top with other imports
-
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
@@ -16,6 +16,7 @@ const Chat = () => {
     const [receiverUser, setReceiverUser] = useState(null);
     const [messages, setMessages] = useState([]);
     const [message, setMessage] = useState("");
+    const [loading, setLoading] = useState(true); // ✅ loading state
 
     useEffect(() => {
         const fetchReceiver = async () => {
@@ -34,12 +35,14 @@ const Chat = () => {
 
     useEffect(() => {
         const fetchMessages = async () => {
+            setLoading(true); // ✅ Start loading
             try {
                 const res = await axios.get(`${API_BASE_URL}/api/message/conversation/${senderId}/${receiverId}`);
                 setMessages(res.data);
             } catch (err) {
                 console.error("Failed to fetch messages", err);
             }
+            setLoading(false); // ✅ Stop loading
         };
 
         if (senderId && receiverId) {
@@ -63,7 +66,7 @@ const Chat = () => {
         }
     };
 
-    if (!receiverUser) return <div>Loading chat...</div>;
+    if (!receiverUser) return <Spinner />;
 
     return (
         <div className="chat-container">
@@ -79,23 +82,32 @@ const Chat = () => {
                 <span>{receiverUser.name || receiverUser.email}</span>
             </div>
 
-            <div className="chat-messages">
-                {messages.map((msg, index) => (
-                    <div
-                        key={index}
-                        className={`chat-message ${msg.sender === senderId ? "sent" : "received"
-                            }`}
-                    >
-                        <span>{msg.message}</span>
-                        <div className="chat-time">
-                            {new Date(msg.createdAt).toLocaleTimeString([], {
-                                hour: "2-digit",
-                                minute: "2-digit",
-                            })}
+            {loading ? (
+                <div style={{ padding: "2rem" }}>
+                    <Spinner />
+                </div>
+            ) : (
+                <div className="chat-messages">
+                    {messages.map((msg, index) => (
+                        <div
+                            key={index}
+                            className={`chat-message ${msg.sender === senderId ? "sent" : "received"}`}
+                        >
+                            <span>{msg.message}</span>
+                            <div className="chat-time">
+                                {new Date(msg.createdAt).toLocaleString([], {
+                                    day: "2-digit",
+                                    month: "short",
+                                    year: "numeric",
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                    hour12: true,
+                                })}
+                            </div>
                         </div>
-                    </div>
-                ))}
-            </div>
+                    ))}
+                </div>
+            )}
 
             <div className="chat-input">
                 <input

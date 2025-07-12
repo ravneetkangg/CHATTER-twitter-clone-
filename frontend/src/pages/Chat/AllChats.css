@@ -52,6 +52,16 @@
     font-weight: 600;
     font-size: 1rem;
     color: #333;
+    margin-bottom: 4px;
+}
+
+
+/* ✅ New wrapper for preview + time */
+
+.chat-info-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .chat-info-preview {
@@ -60,4 +70,13 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    flex: 1;
+}
+
+.chat-info-time {
+    font-size: 0.8rem;
+    color: #888;
+    margin-left: 1rem;
+    white-space: nowrap;
+    flex-shrink: 0;
 }
