@@ -9,6 +9,8 @@ import Home from './pages/Home/Home';
 import Profile from './pages/Profile/Profile';
 import EditProfile from './pages/Profile/EditProfile';
 import OtherUserProfile from './pages/Profile/OtherUserProfile';
+import Chat from "./pages/Chat/Chat";
+import AllChats from './pages/Chat/AllChats';
 
 function App() {
   return (
@@ -24,6 +26,8 @@ function App() {
           <Route path="/profile/:tab" element={<Profile />} />
           <Route path="/profile/edit" element={<EditProfile />} />
           <Route path="/user/:email" element={<OtherUserProfile />} />
+          <Route path="/chat/:email" element={<Chat />} />
+          <Route path="/allChats" element={<AllChats />} />
           <Route path="*" element={<StarRoute />} />
         </Routes>
       </Router>

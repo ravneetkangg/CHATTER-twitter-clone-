@@ -339,3 +339,16 @@
     z-index: 999;
     /* ensure it's above nav */
 }
+
+.message-btn {
+    background-color: #1da1f2;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.message-btn:hover {
+    background-color: #0d8ddb;
+}

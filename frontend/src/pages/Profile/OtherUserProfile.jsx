@@ -89,6 +89,10 @@ const OtherUserProfile = () => {
     );
   }
 
+  const handleMessage = () => {
+    navigate(`/chat/${encodeURIComponent(user.email)}`)
+  };
+
   return (
     <div className="profile-page">
       <div className="profile-full-wrapper">
@@ -136,16 +140,13 @@ const OtherUserProfile = () => {
               </div>
             </div>
 
-            <div style={{ marginTop: "20px" }}>
+            <div style={{ marginTop: "20px", display: "flex", gap: "10px" }}>
               {isFollowing ? (
-                <button className="unfollow-btn" onClick={handleUnfollow}>
-                  Unfollow
-                </button>
+                <button className="unfollow-btn" onClick={handleUnfollow}>Unfollow</button>
               ) : (
-                <button className="follow-btn" onClick={handleFollow}>
-                  Follow
-                </button>
+                <button className="follow-btn" onClick={handleFollow}>Follow</button>
               )}
+              <button className="message-btn" onClick={handleMessage}>Message</button>
             </div>
           </div>
         </div>

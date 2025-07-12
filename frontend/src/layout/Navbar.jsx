@@ -80,6 +80,7 @@ const Navbar = () => {
 
                     <div className="nav-links">
                         <Link to="/home">Home</Link>
+                        <Link to="/allchats">Chats</Link>
                         <Link to="/notifications">Notifications</Link>
                         <Link to="/profile">Profile</Link>
                     </div>
