@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const User = require("../models/User");
 
 // Send a new message
+// Send a new message
 exports.sendMessage = async(req, res) => {
     try {
         const { senderId, receiverId, message } = req.body;
@@ -17,12 +18,17 @@ exports.sendMessage = async(req, res) => {
             message
         });
 
+        // ✅ Emit the message to the receiver via Socket.IO
+        const io = req.app.get("io");
+        io.to(receiverId).emit("newMessage", newMessage);
+
         res.status(201).json(newMessage);
     } catch (error) {
         console.error("Error sending message:", error);
         res.status(500).json({ error: "Failed to send message." });
     }
 };
+
 
 // Get all messages between two users
 exports.getConversation = async(req, res) => {

@@ -1,11 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa";
 import Spinner from "../../components/Common/Spinner";
+import { io } from "socket.io-client"; // ✅ new import
 import "./Chat.css";
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
+const socket = io(API_BASE_URL); // ✅ connect to socket server
 
 const Chat = () => {
     const { email } = useParams();
@@ -16,7 +19,32 @@ const Chat = () => {
     const [receiverUser, setReceiverUser] = useState(null);
     const [messages, setMessages] = useState([]);
     const [message, setMessage] = useState("");
-    const [loading, setLoading] = useState(true); // ✅ loading state
+    const [loading, setLoading] = useState(true);
+
+    const messagesEndRef = useRef(null);
+
+    // ✅ Join socket room on mount
+    useEffect(() => {
+        if (senderId) {
+            socket.emit("join", senderId);
+        }
+    }, [senderId]);
+
+    // ✅ Listen for incoming messages
+    useEffect(() => {
+        socket.on("newMessage", (newMsg) => {
+            if (
+                (newMsg.sender === receiverId && newMsg.receiver === senderId) ||
+                (newMsg.sender === senderId && newMsg.receiver === receiverId)
+            ) {
+                setMessages((prev) => [...prev, newMsg]);
+            }
+        });
+
+        return () => {
+            socket.off("newMessage");
+        };
+    }, [receiverId, senderId]);
 
     useEffect(() => {
         const fetchReceiver = async () => {
@@ -35,14 +63,14 @@ const Chat = () => {
 
     useEffect(() => {
         const fetchMessages = async () => {
-            setLoading(true); // ✅ Start loading
+            setLoading(true);
             try {
                 const res = await axios.get(`${API_BASE_URL}/api/message/conversation/${senderId}/${receiverId}`);
                 setMessages(res.data);
             } catch (err) {
                 console.error("Failed to fetch messages", err);
             }
-            setLoading(false); // ✅ Stop loading
+            setLoading(false);
         };
 
         if (senderId && receiverId) {
@@ -59,12 +87,23 @@ const Chat = () => {
                 receiverId,
                 message,
             });
+
+            // ✅ We also emit this manually in case we want to support echo
+            // socket.emit("newMessage", res.data); (Optional: backend does this now)
             setMessages((prev) => [...prev, res.data]);
             setMessage("");
         } catch (err) {
             console.error("Failed to send message", err);
         }
     };
+
+    const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    };
+
+    useEffect(() => {
+        scrollToBottom();
+    }, [messages]);
 
     if (!receiverUser) return <Spinner />;
 
@@ -106,6 +145,7 @@ const Chat = () => {
                             </div>
                         </div>
                     ))}
+                    <div ref={messagesEndRef} />
                 </div>
             )}
 
